@@ -1,4 +1,3 @@
-===============
 The YAML Format
 ===============
 
@@ -379,13 +378,13 @@ Status
 
 **Added Version:** 0.1
 
-html_contains
+response_contains
 -----------
 **Description**: Checks the entire response against the regular expression provided.
 
-**Syntax:** ```html_contains: "<regex string>"```
+**Syntax:** ```response_contains: "<regex string>"```
 
-**Example Usage:** ```html_contains: "hello-[a-z]orld"```
+**Example Usage:** ```response_contains: "hello-[a-z]orld"```
 
 **Default Value:** None
 
