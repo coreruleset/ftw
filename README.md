@@ -1,5 +1,5 @@
 ## Framework for Testing WAFs (FTW)
-[![Build Status](https://travis-ci.org/fastly/ftw.svg?branch=master)](https://travis-ci.org/fastly/ftw)
+[![Build Status](https://travis-ci.org/CRS-support/ftw.svg?branch=master)](https://travis-ci.org/fastly/ftw)
 [![PyPI version](https://badge.fury.io/py/ftw.svg)](https://badge.fury.io/py/ftw)
 
 ##### Purpose
@@ -13,7 +13,7 @@ Goals / Use cases include:
 * Test and verify custom rules for WAFs that are not part of the core rule set
 
 ## Installation
-* `git clone git@github.com:fastly/ftw.git`
+* `git clone https://github.com/CRS-support/ftw.git`
 * `cd ftw`
 * Make sure that pip is installed `apt-get install python-pip`
 * `pip install -r requirements.txt`
