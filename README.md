@@ -17,7 +17,7 @@ For our 1.0 release announcement, check out the [OWASP CRS Blog](https://corerul
 ## Installation
 * `git clone https://github.com/CRS-support/ftw.git`
 * `cd ftw`
-* `virtualenv env && env/bin/activate` 
+* `virtualenv env && source ./env/bin/activate` 
 * `pip install -r requirements.txt`
 
 ## Writing your first tests
