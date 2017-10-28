@@ -19,6 +19,7 @@ For our 1.0 release announcement, check out the [OWASP CRS Blog](https://corerul
 * `cd ftw`
 * `virtualenv env && source ./env/bin/activate` 
 * `pip install -r requirements.txt`
+* `py.test -s -v test/test_default.py --ruledir=test/yaml`
 
 ## Writing your first tests
 The core of FTW is it's extensible `yaml` based tests. This section lists a few resources on how they are formatted, how to write them and how you can use them.
