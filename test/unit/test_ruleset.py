@@ -5,13 +5,16 @@ def test_output():
     with pytest.raises(errors.TestError) as excinfo:
         output = ruleset.Output({})
     assert(excinfo.value.args[0].startswith('Need at least'))
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(errors.TestError) as excinfo:
         output = ruleset.Output({'status': 'derp'})
-    assert(excinfo.value.message.startswith('invalid literal'))
-
+    assert(excinfo.value.args[0].startswith('Need at least'))
     with pytest.raises(TypeError) as excinfo:
         output = ruleset.Output({'log_contains': 10})
-
+    output = ruleset.Output({'status': 200}) 
+    output = ruleset.Output({'status': [100,200]})
+    with pytest.raises(errors.TestError) as excinfo:
+        output = ruleset.Output({'status': [100,'derp']})
+    assert(excinfo.value.args[0].startswith('Non integers found'))
 def test_input():
     input_1 = ruleset.Input()
     assert(input_1.uri == '/')

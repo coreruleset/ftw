@@ -20,7 +20,10 @@ class TestRunner(object):
         Compares the expected output against actual output of test and stage
         In a separate function to make debugging easy with py.test
         """
-        assert expected_status == actual_status
+        if type(expected_status) is list:
+            assert actual_status in expected_status
+        else:
+            assert expected_status == actual_status
 
     def test_log(self, lines, log_contains, negate):
         """

@@ -24,8 +24,27 @@ class Output(object):
                 }
             )
         self.output_dict = output_dict
-        self.status = int(output_dict[self.STATUS]) \
-            if self.STATUS in self.output_dict else None
+        skip_checks = False
+        if self.STATUS not in self.output_dict:
+            skip_checks = True
+        if skip_checks is False and isinstance(output_dict[self.STATUS],list):
+            # Check the number of integers in the list
+            num_ele = len([s for s in output_dict[self.STATUS] if type(s) is int])
+            # If all elements are integers, we're good
+            if len(output_dict[self.STATUS]) == num_ele:
+                self.status = output_dict[self.STATUS]
+            else:
+                raise errors.TestError(
+                    'Non integers found in Status list',
+                    {
+                        'status': output_dict[self.STATUS],
+                        'function': 'ruleset.Output.__init__'
+                    }
+                )
+        elif skip_checks is False and isinstance(output_dict[self.STATUS],int):
+            self.status = int(output_dict[self.STATUS])
+        else:
+            self.status = None
         self.response_contains_str = self.process_regex(self.RESPONSE)
         self.no_log_contains_str = self.process_regex(self.NOTLOG)
         self.log_contains_str = self.process_regex(self.LOG)

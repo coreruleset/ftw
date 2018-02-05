@@ -368,7 +368,7 @@ Status
 -----------
 **Description**: Checks the response code of the response to see if it matches the provided value
 
-**Syntax:** ```status: <integer>```
+**Syntax:** ```status: <integer>|<integer list>```
 
 **Example Usage:** ```status: 200```
 
