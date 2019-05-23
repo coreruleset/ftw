@@ -113,7 +113,7 @@ class TestRunner(object):
             status = result[5]
             if (stage.output.log_contains_str or stage.output.no_log_contains_str):
                 logger_obj.set_times(start, end)
-                lines = logger_obj.get_logs() 
+                lines = logger_obj.get_logs()
                 if stage.output.log_contains_str:
                     self.test_log(lines, stage.output.log_contains_str, False)
                 if stage.output.no_log_contains_str:
@@ -128,7 +128,7 @@ class TestRunner(object):
     def run_test_build_journal(self, rule_id, test, journal_file, tablename):
         """
         Build journal entries from a test within a specified rule_id
-        Pass in the rule_id, test object, and path to journal_file 
+        Pass in the rule_id, test object, and path to journal_file
         DB MUST already be instantiated from util.instantiate_database()
         """
         conn = sqlite3.connect(journal_file)
@@ -140,7 +140,7 @@ class TestRunner(object):
             try:
                 print 'Running test %s from rule file %s' % (test.test_title, rule_id)
                 http_ua = http.HttpUA()
-                start = datetime.datetime.now()
+                start = datetime.datetime.utcnow()
                 http_ua.send_request(stage.input)
                 response = http_ua.response_object.response
                 status = http_ua.response_object.status
@@ -149,7 +149,7 @@ class TestRunner(object):
                 response = str(e)
                 status = -1
             finally:
-                end = datetime.datetime.now()
+                end = datetime.datetime.utcnow()
                 ins_q = util.get_insert_statement(tablename)
                 cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status, i))
                 conn.commit()
@@ -160,26 +160,26 @@ class TestRunner(object):
         input, waits for output then compares expected vs actual output
         http_ua can be passed in to persist cookies
         """
-       
+
         # Send our request (exceptions caught as needed)
         if stage.output.expect_error:
             with pytest.raises(errors.TestError) as excinfo:
                 if not http_ua:
                     http_ua = http.HttpUA()
-                start = datetime.datetime.now()
+                start = datetime.datetime.utcnow()
                 http_ua.send_request(stage.input)
-                end = datetime.datetime.now()
+                end = datetime.datetime.utcnow()
             print '\nExpected Error: %s' % str(excinfo)
         else:
             if not http_ua:
                 http_ua = http.HttpUA()
-            start = datetime.datetime.now()
+            start = datetime.datetime.utcnow()
             http_ua.send_request(stage.input)
-            end = datetime.datetime.now()                
+            end = datetime.datetime.utcnow()                
         if (stage.output.log_contains_str or stage.output.no_log_contains_str) \
         and logger_obj is not None:
             logger_obj.set_times(start, end)
-            lines = logger_obj.get_logs() 
+            lines = logger_obj.get_logs()
             if stage.output.log_contains_str:
                 self.test_log(lines, stage.output.log_contains_str, False)
             if stage.output.no_log_contains_str:
