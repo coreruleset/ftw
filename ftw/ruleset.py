@@ -1,6 +1,7 @@
 import re
 import urllib
-import urlparse
+
+from six.moves.urllib.parse import urlparse
 
 from . import errors
 

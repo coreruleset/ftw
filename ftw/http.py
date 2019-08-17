@@ -5,21 +5,23 @@ import ssl
 import string
 import errno
 import time
-import StringIO
 import gzip
 import os
 import sys
 import re
 import base64
 import zlib
-import Cookie
 import encodings
 from IPy import IP
 
+from six import BytesIO, PY2
+from six.moves import http_cookies
+
 from . import errors
 
-reload(sys)
-sys.setdefaultencoding('utf8')
+if PY2:
+    reload(sys)
+    sys.setdefaultencoding('utf8')
 
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
@@ -45,11 +47,11 @@ class HttpResponse(object):
         response_data
         """
         if response_headers['content-encoding'] == 'gzip':
-            buf = StringIO.StringIO(response_data)
+            buf = BytesIO(response_data)
             zipbuf = gzip.GzipFile(fileobj=buf)
             response_data = zipbuf.read()
         elif response_headers['content-encoding'] == 'deflate':
-            data = StringIO.StringIO(zlib.decompress(response_data))
+            data = BytesIO(zlib.decompress(response_data))
             response_data = data.read()
         else:
             raise errors.TestError(
@@ -167,9 +169,9 @@ class HttpResponse(object):
                 response_headers[header[0].lower()] = header[1].lstrip()
         if 'set-cookie' in response_headers.keys():
             try:
-                cookie = Cookie.SimpleCookie()
+                cookie = http_cookies.SimpleCookie()
                 cookie.load(response_headers['set-cookie'])
-            except Cookie.CookieError as err:
+            except http_cookies.CookieError as err:
                 raise errors.TestError(
                     'Error processing the cookie content into a SimpleCookie',
                     {
@@ -320,9 +322,9 @@ class HttpUA(object):
             if 'cookie' in self.request_object.headers.keys():
                 # Create a SimpleCookie out of our provided cookie
                 try:
-                    provided_cookie = Cookie.SimpleCookie()
+                    provided_cookie = http_cookies.SimpleCookie()
                     provided_cookie.load(self.request_object.headers['cookie'])
-                except Cookie.CookieError as err:
+                except http_cookies.CookieError as err:
                     raise errors.TestError(
                         'Error processing the existing cookie into a SimpleCookie',
                         {
