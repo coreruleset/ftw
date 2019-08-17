@@ -14,7 +14,7 @@ import zlib
 import encodings
 from IPy import IP
 
-from six import BytesIO, PY2
+from six import BytesIO, PY2, iteritems
 from six.moves import http_cookies
 
 from . import errors
@@ -333,23 +333,23 @@ class HttpUA(object):
                             'function': 'http.HttpResponse.build_request'
                         })
                 result_cookie = {}
-                for cookie_key, cookie_morsal in provided_cookie.iteritems():
+                for cookie_key, cookie_morsal in iteritems(provided_cookie):
                     result_cookie[cookie_key] = provided_cookie[cookie_key].value
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in cookie.iteritems():
+                    for cookie_key, cookie_morsal in iteritems(cookie):
                         if cookie_key in result_cookie.keys():
                             # we don't overwrite a user specified cookie with a saved one
                             pass
                         else:
                             result_cookie[cookie_key] = cookie[cookie_key].value
-                for key, value in result_cookie.iteritems():
+                for key, value in iteritems(result_cookie):
                     cookie_value += (unicode(key) + '=' + unicode(value) + '; ')
                     # Remove the trailing semicolon
                 cookie_value = cookie_value[:-2]
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in cookie.iteritems():
+                    for cookie_key, cookie_morsal in iteritems(cookie):
                         cookie_value += (unicode(cookie_key) + '=' + unicode(cookie_morsal.coded_value) + '; ')
                         # Remove the trailing semicolon
                     cookie_value = cookie_value[:-2]
@@ -358,7 +358,7 @@ class HttpUA(object):
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
-            for hname, hvalue in self.request_object.headers.iteritems():
+            for hname, hvalue in iteritems(self.request_object.headers):
                 headers += unicode(hname) + ': ' + unicode(hvalue) + self.CRLF
         request = request.replace('#headers#', headers)
 
