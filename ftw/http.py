@@ -443,7 +443,7 @@ class HttpUA(object):
                 err.errno == errno.WSAEWOULDBLOCK:
                         pass
                 elif (self.request_object.protocol == 'https' and
-                    err[0] == ssl.SSL_ERROR_WANT_READ):
+                    err.args[0] == ssl.SSL_ERROR_WANT_READ):
                         continue
                 # If we didn't it's an error
                 else:
