@@ -14,7 +14,7 @@ import zlib
 import encodings
 from IPy import IP
 
-from six import BytesIO, PY2, b, iteritems, text_type
+from six import BytesIO, PY2, b, ensure_binary, ensure_str, iteritems, text_type
 from six.moves import http_cookies
 
 from . import errors
@@ -22,10 +22,13 @@ from . import errors
 if PY2:
     reload(sys)
     sys.setdefaultencoding('utf8')
+    escape_codec = 'string_escape'
+else:
+    escape_codec = 'unicode_escape'
 
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
-        self.response = http_response
+        self.response = ensure_binary(http_response)
         # For testing purposes HTTPResponse might be called OOL
         try:
             self.dest_addr = user_agent.request_object.dest_addr
@@ -38,7 +41,7 @@ class HttpResponse(object):
         self.version = None
         self.headers = None
         self.data = None
-        self.CRLF = '\r\n'
+        self.CRLF = b'\r\n'
         self.process_response()
 
     def parse_content_encoding(self, response_headers, response_data):
@@ -147,18 +150,18 @@ class HttpResponse(object):
         Parses an HTTP response after an HTTP request is sent
         """
         split_response = self.response.split(self.CRLF)
-        response_line = split_response[0]
+        response_line = ensure_str(split_response[0])
         response_headers = {}
         response_data = None
         data_line = None
         for line_num in range(1, len(split_response[1:])):
             # CRLF represents the start of data
-            if split_response[line_num] == '':
+            if not split_response[line_num]:
                 data_line = line_num + 1
                 break
             else:
                 # Headers are all split by ':'
-                header = split_response[line_num].split(':', 1)
+                header = split_response[line_num].split(b':', 1)
                 if len(header) != 2:
                     raise errors.TestError(
                         'Did not receive a response with valid headers',
@@ -166,6 +169,7 @@ class HttpResponse(object):
                             'header_rcvd': str(header),
                             'function': 'http.HttpResponse.process_response'
                         })
+                header = ensure_str(header[0]), ensure_str(header[1])
                 response_headers[header[0].lower()] = header[1].lstrip()
         if 'set-cookie' in response_headers.keys():
             try:
@@ -389,7 +393,7 @@ class HttpUA(object):
                         'data': text_type(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
                     })                
-            request = request.replace('#data#', data)
+            request = request.replace('#data#', ensure_str(data))
         else:
             request = request.replace('#data#', '')
         # If we have a Raw Request we should use that instead
@@ -403,10 +407,10 @@ class HttpUA(object):
             request = self.request_object.raw_request
             # We do this regardless of magic if you want to send a literal 
             # '\' 'r' or 'n' use encoded request.
-            request = request.decode('string_escape')
+            request = b(request).decode(escape_codec)
         if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
-            request = request.decode('string_escape')
+            request = request.decode(escape_codec)
         # if we have an Encoded request we should use that
         self.request = request
 
@@ -429,7 +433,7 @@ class HttpUA(object):
             try:
                 data = self.sock.recv(self.RECEIVE_BYTES)
                 if data:
-                    our_data.append(data)
+                    our_data.append(ensure_binary(data))
                     begin = time.time()
                 else:
                     # Sleep for sometime to indicate a gap
@@ -456,7 +460,7 @@ class HttpUA(object):
                             'message': err,
                             'function': 'http.HttpUA.get_response'
                         })
-        if ''.join(our_data) == '':
+        if not b''.join(our_data):
             raise errors.TestError(
                 'No response from server. Request likely timed out.',
                 {
@@ -466,7 +470,7 @@ class HttpUA(object):
                     'msg': 'Please send the request and check Wireshark',
                     'function': 'http.HttpUA.get_response'
                 })                                    
-        self.response_object = HttpResponse(''.join(our_data), self)
+        self.response_object = HttpResponse(b''.join(our_data), self)
         try:
             self.sock.shutdown(1)
             self.sock.close()
