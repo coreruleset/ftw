@@ -1,8 +1,8 @@
 import re
-import errors
 import urllib
 import urlparse
 
+from . import errors
 
 class Output(object):
     """

@@ -1,12 +1,13 @@
 import datetime
 from dateutil import parser
-import errors
-import http
 import pytest
-import ruleset
-import util
 import re
 import sqlite3
+
+from . import errors
+from . import http
+from . import ruleset
+from . import util
 
 class TestRunner(object):
     """

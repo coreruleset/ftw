@@ -15,7 +15,8 @@ import zlib
 import Cookie
 import encodings
 from IPy import IP
-import errors
+
+from . import errors
 
 reload(sys)
 sys.setdefaultencoding('utf8')
