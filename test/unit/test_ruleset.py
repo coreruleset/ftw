@@ -30,7 +30,7 @@ def test_input():
 def test_testobj():
     with pytest.raises(KeyError) as excinfo:
         test = ruleset.Test({},{})
-    assert(excinfo.value.message == 'test_title')
+    assert 'test_title' in str(excinfo.value)
     stages_dict = {'test_title': 1, 'stages':[{'stage': {'output':{'log_contains':'foo'}, 'input': {}}}]}
     test = ruleset.Test(stages_dict, {})
 
