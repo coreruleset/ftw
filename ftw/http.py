@@ -14,7 +14,7 @@ import zlib
 import encodings
 from IPy import IP
 
-from six import BytesIO, PY2, iteritems
+from six import BytesIO, PY2, iteritems, text_type
 from six.moves import http_cookies
 
 from . import errors
@@ -343,14 +343,14 @@ class HttpUA(object):
                         else:
                             result_cookie[cookie_key] = cookie[cookie_key].value
                 for key, value in iteritems(result_cookie):
-                    cookie_value += (unicode(key) + '=' + unicode(value) + '; ')
+                    cookie_value += (text_type(key) + '=' + text_type(value) + '; ')
                     # Remove the trailing semicolon
                 cookie_value = cookie_value[:-2]
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
                     for cookie_key, cookie_morsal in iteritems(cookie):
-                        cookie_value += (unicode(cookie_key) + '=' + unicode(cookie_morsal.coded_value) + '; ')
+                        cookie_value += (text_type(cookie_key) + '=' + text_type(cookie_morsal.coded_value) + '; ')
                         # Remove the trailing semicolon
                     cookie_value = cookie_value[:-2]
                     self.request_object.headers['cookie'] = cookie_value
@@ -359,7 +359,7 @@ class HttpUA(object):
         headers = ''
         if self.request_object.headers != {}:
             for hname, hvalue in iteritems(self.request_object.headers):
-                headers += unicode(hname) + ': ' + unicode(hvalue) + self.CRLF
+                headers += text_type(hname) + ': ' + text_type(hvalue) + self.CRLF
         request = request.replace('#headers#', headers)
 
         # If we have data append it
@@ -386,7 +386,7 @@ class HttpUA(object):
                     {
                         'msg': str(err),
                         'Content-Type': str(self.request_object.headers['Content-Type']),
-                        'data': unicode(self.request_object.data),
+                        'data': text_type(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
                     })                
             request = request.replace('#data#', data)
