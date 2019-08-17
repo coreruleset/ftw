@@ -1,3 +1,4 @@
+from __future__ import print_function
 from ftw.ftw import ruleset, http, errors
 import pytest
 import sys
@@ -9,7 +10,7 @@ def test_cookies1():
     x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})
     http_ua.send_request(x)
     with pytest.raises(KeyError):
-        print http_ua.request_object.headers["cookie"]
+        print(http_ua.request_object.headers["cookie"])
     assert("set-cookie" in http_ua.response_object.headers.keys())
     cookie_data = http_ua.response_object.headers["set-cookie"]
     cookie_var = cookie_data.split("=")[0]
