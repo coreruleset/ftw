@@ -308,13 +308,13 @@ class HttpUA(object):
     def build_request(self):
         request = '#method# #uri##version#%s#headers#%s#data#' % \
                   (self.CRLF, self.CRLF)
-        request = string.replace(
-            request, '#method#', self.request_object.method)
+        request = request.replace(
+            '#method#', self.request_object.method)
         # We add a space after here to account for HEAD requests with no url
-        request = string.replace(
-            request, '#uri#', self.request_object.uri + ' ')
-        request = string.replace(
-            request, '#version#', self.request_object.version)
+        request = request.replace(
+            '#uri#', self.request_object.uri + ' ')
+        request = request.replace(
+            '#version#', self.request_object.version)
         available_cookies = self.find_cookie()
         # If the user has requested a tracked cookie and we have one set it
         if available_cookies:
@@ -360,7 +360,7 @@ class HttpUA(object):
         if self.request_object.headers != {}:
             for hname, hvalue in self.request_object.headers.iteritems():
                 headers += unicode(hname) + ': ' + unicode(hvalue) + self.CRLF
-        request = string.replace(request, '#headers#', headers)
+        request = request.replace('#headers#', headers)
 
         # If we have data append it
         if self.request_object.data != '':
@@ -389,9 +389,9 @@ class HttpUA(object):
                         'data': unicode(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
                     })                
-            request = string.replace(request, '#data#', data)
+            request = request.replace('#data#', data)
         else:
-            request = string.replace(request, '#data#', '')
+            request = request.replace('#data#', '')
         # If we have a Raw Request we should use that instead
         if self.request_object.raw_request is not None:
             if self.request_object.encoded_request is not None:
