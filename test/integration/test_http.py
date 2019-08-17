@@ -255,3 +255,14 @@ def test19():
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     assert http_ua.request_object.data == "test=hello%3Fx"
+
+
+def test20():
+    """Accept-Encoding deflate"""
+    x = ruleset.Input(dest_addr="example.com", version="HTTP/1.0",
+                      headers={"Host": "example.com",
+                               "Accept-Encoding": "deflate"})
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)
+    assert http_ua.response_object.status == 200
+    assert http_ua.response_object.headers["content-encoding"] == "deflate"

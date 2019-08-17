@@ -54,8 +54,7 @@ class HttpResponse(object):
             zipbuf = gzip.GzipFile(fileobj=buf)
             response_data = zipbuf.read()
         elif response_headers['content-encoding'] == 'deflate':
-            data = BytesIO(zlib.decompress(response_data))
-            response_data = data.read()
+            response_data = zlib.decompress(response_data, -zlib.MAX_WBITS)
         else:
             raise errors.TestError(
                 'Received unknown Content-Encoding',
