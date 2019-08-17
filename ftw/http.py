@@ -14,7 +14,7 @@ import zlib
 import encodings
 from IPy import IP
 
-from six import BytesIO, PY2, iteritems, text_type
+from six import BytesIO, PY2, b, iteritems, text_type
 from six.moves import http_cookies
 
 from . import errors
@@ -249,7 +249,7 @@ class HttpUA(object):
         self.build_socket()
         self.build_request()
         try:
-            self.sock.send(self.request)
+            self.sock.send(b(self.request))
         except socket.error as err:
             raise errors.TestError(
                 'We were unable to send the request to the socket',
