@@ -1,3 +1,4 @@
+from __future__ import print_function
 from ftw.ftw import ruleset, http, errors
 import pytest
 import sys
@@ -6,14 +7,14 @@ import sys
 def test_cookies1():
     """Tests accessing a site that sets a cookie and then wants to resend the cookie"""
     http_ua = http.HttpUA()
-    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})
+    x = ruleset.Input(protocol="https",port=443,dest_addr="www.ieee.org",headers={"Host":"www.ieee.org"})
     http_ua.send_request(x)
     with pytest.raises(KeyError):
-        print http_ua.request_object.headers["cookie"]
+        print(http_ua.request_object.headers["cookie"])
     assert("set-cookie" in http_ua.response_object.headers.keys())
     cookie_data = http_ua.response_object.headers["set-cookie"]
     cookie_var = cookie_data.split("=")[0]
-    x = ruleset.Input(dest_addr="ieee.org",headers={"Host":"ieee.org"})
+    x = ruleset.Input(protocol="https",port=443,dest_addr="www.ieee.org",headers={"Host":"www.ieee.org"})
     http_ua.send_request(x)
     assert(http_ua.request_object.headers["cookie"].split('=')[0] == cookie_var)
 
@@ -254,3 +255,14 @@ def test19():
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     assert http_ua.request_object.data == "test=hello%3Fx"
+
+
+def test20():
+    """Accept-Encoding deflate"""
+    x = ruleset.Input(dest_addr="example.com", version="HTTP/1.0",
+                      headers={"Host": "example.com",
+                               "Accept-Encoding": "deflate"})
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)
+    assert http_ua.response_object.status == 200
+    assert http_ua.response_object.headers["content-encoding"] == "deflate"

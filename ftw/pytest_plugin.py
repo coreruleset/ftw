@@ -1,7 +1,8 @@
 import pytest
-import ruleset
 import util
 import os
+
+from . import ruleset
 
 def get_testdata(rulesets):
     """

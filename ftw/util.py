@@ -3,8 +3,9 @@ from __future__ import print_function
 import yaml
 import os
 import sqlite3
-import ruleset
 from glob import glob
+
+from . import ruleset
 
 def get_insert_statement(table_name):
     """

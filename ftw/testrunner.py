@@ -1,12 +1,16 @@
+from __future__ import print_function
 import datetime
 from dateutil import parser
-import errors
-import http
 import pytest
-import ruleset
-import util
 import re
 import sqlite3
+
+from six import ensure_str
+
+from . import errors
+from . import http
+from . import ruleset
+from . import util
 
 class TestRunner(object):
     """
@@ -54,7 +58,7 @@ class TestRunner(object):
                     'response_object': response_object,
                     'function': 'testrunner.TestRunner.test_response'
                 })
-        if regex.search(response_object.response):
+        if regex.search(ensure_str(response_object.response)):
             assert True
         else:
             assert False
@@ -64,7 +68,7 @@ class TestRunner(object):
         Checks if the response response contains a regex specified in the
         output stage. It will assert that the regex is present.
         """
-        if regex.search(response):
+        if regex.search(ensure_str(response)):
             assert True
         else:
             assert False
@@ -138,14 +142,14 @@ class TestRunner(object):
             response = None
             status = None
             try:
-                print 'Running test %s from rule file %s' % (test.test_title, rule_id)
+                print('Running test %s from rule file %s' % (test.test_title, rule_id))
                 http_ua = http.HttpUA()
                 start = datetime.datetime.now()
                 http_ua.send_request(stage.input)
                 response = http_ua.response_object.response
                 status = http_ua.response_object.status
             except errors.TestError as e:
-                print '%s got error. %s' % (test.test_title, str(e))
+                print('%s got error. %s' % (test.test_title, str(e)))
                 response = str(e)
                 status = -1
             finally:
@@ -169,7 +173,7 @@ class TestRunner(object):
                 start = datetime.datetime.now()
                 http_ua.send_request(stage.input)
                 end = datetime.datetime.now()
-            print '\nExpected Error: %s' % str(excinfo)
+            print('\nExpected Error: %s' % str(excinfo))
         else:
             if not http_ua:
                 http_ua = http.HttpUA()

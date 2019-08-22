@@ -1,8 +1,9 @@
 import re
-import errors
-import urllib
-import urlparse
 
+from six import ensure_str
+from six.moves.urllib.parse import parse_qsl, unquote, urlencode, urlparse
+
+from . import errors
 
 class Output(object):
     """
@@ -116,10 +117,10 @@ class Input(object):
             # check if encoded and encode if it should be
             if 'Content-Type' in headers.keys():
                 if headers['Content-Type'] == 'application/x-www-form-urlencoded' and stop_magic is False:
-                    if urllib.unquote(self.data).decode('utf8') == self.data:
-                        query_string = urlparse.parse_qsl(self.data)
+                    if ensure_str(unquote(self.data)) == self.data:
+                        query_string = parse_qsl(self.data)
                         if len(query_string) != 0:
-                            encoded_args = urllib.urlencode(query_string)
+                            encoded_args = urlencode(query_string)
                             self.data = encoded_args
             if 'Content-Length' not in headers.keys() and stop_magic is False:
                 # The two is for the trailing CRLF and the one after
