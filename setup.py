@@ -21,9 +21,10 @@ setup(name='ftw',
       packages=['ftw'],
       keywords=['waf'],
       install_requires=[
-          'IPy',
+          'IPy==0.83',
+          'PyYAML==4.2b1',
           'pytest==2.9.1',
-          'PyYAML',
-          'python-dateutil==2.6.0'
+          'python-dateutil==2.6.0',
+          'six==1.12.0'
       ],
      )
