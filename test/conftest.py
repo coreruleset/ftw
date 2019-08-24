@@ -1,5 +1,5 @@
 import pytest
-from ftw.ftw import ruleset, util
+from ftw import ruleset, util
 import os
 
 def get_testdata(rulesets):
