@@ -1,9 +1,10 @@
 import re
 
 from six import ensure_str
-from six.moves.urllib.parse import parse_qsl, unquote, urlencode, urlparse
+from six.moves.urllib.parse import parse_qsl, unquote, urlencode
 
 from . import errors
+
 
 class Output(object):
     """
@@ -14,7 +15,7 @@ class Output(object):
     def __init__(self, output_dict):
         self.STATUS = 'status'
         self.LOG = 'log_contains'
-        self.NOTLOG = 'no_log_contains' 
+        self.NOTLOG = 'no_log_contains'
         self.RESPONSE = 'response_contains'
         self.ERROR = 'expect_error'
         if output_dict is None:
@@ -28,9 +29,10 @@ class Output(object):
         skip_checks = False
         if self.STATUS not in self.output_dict:
             skip_checks = True
-        if skip_checks is False and isinstance(output_dict[self.STATUS],list):
+        if skip_checks is False and isinstance(output_dict[self.STATUS], list):
             # Check the number of integers in the list
-            num_ele = len([s for s in output_dict[self.STATUS] if type(s) is int])
+            num_ele = len([s for s in output_dict[self.STATUS]
+                           if type(s) is int])
             # If all elements are integers, we're good
             if len(output_dict[self.STATUS]) == num_ele:
                 self.status = output_dict[self.STATUS]
@@ -42,7 +44,8 @@ class Output(object):
                         'function': 'ruleset.Output.__init__'
                     }
                 )
-        elif skip_checks is False and isinstance(output_dict[self.STATUS],int):
+        elif skip_checks is False and isinstance(output_dict[self.STATUS],
+                                                 int):
             self.status = int(output_dict[self.STATUS])
         else:
             self.status = None
@@ -57,7 +60,7 @@ class Output(object):
                 and self.no_log_contains_str is None \
                 and self.expect_error is None:
             raise errors.TestError(
-                'Need at least one status, response_contains ' +
+                'Need at least one status, response_contains '
                 ', no_log_contains, or log_contains',
                 {
                     'status': self.status,
@@ -116,7 +119,8 @@ class Input(object):
                 headers['Content-Type'] = 'application/x-www-form-urlencoded'
             # check if encoded and encode if it should be
             if 'Content-Type' in headers.keys():
-                if headers['Content-Type'] == 'application/x-www-form-urlencoded' and stop_magic is False:
+                if headers['Content-Type'] == \
+                   'application/x-www-form-urlencoded' and stop_magic is False:
                     if ensure_str(unquote(self.data)) == self.data:
                         query_string = parse_qsl(self.data)
                         if len(query_string) != 0:

@@ -2,15 +2,14 @@ from __future__ import print_function
 import datetime
 from dateutil import parser
 import pytest
-import re
 import sqlite3
 
 from six import ensure_str
 
 from . import errors
 from . import http
-from . import ruleset
 from . import util
+
 
 class TestRunner(object):
     """
@@ -75,19 +74,25 @@ class TestRunner(object):
 
     def query_for_stage_results(self, tablename):
         """
-        Construct query for sqlite database for a specific stage run from a journal
-        Possible SQL injection here, but since its sqlite and if someone had control of the python script
-        and the sqlite database, they can just open the database/modify it without using our program
+        Construct query for sqlite database for a specific stage
+        run from a journal.
+        Possible SQL injection here, but since its sqlite and if
+        someone had control of the python script and the sqlite
+        database, they can just open the database/modify it without
+        using our program
         """
         q = 'SELECT * FROM %s WHERE stage = ? AND test_id = ?' % tablename
         return q
 
-    def run_stage_with_journal(self, rule_id, test, journal_file, tablename, logger_obj):
+    def run_stage_with_journal(self, rule_id, test, journal_file,
+                               tablename, logger_obj):
         """
-        Compare entries and responses in a journal file with a logger object
-        This will follow similar logic as run_stage, where a logger_obj.get_logs()
-        MUST be implemented by the user so times can be retrieved and compared
-        against the responses logged in the journal db
+        Compare entries and responses in a journal file with a
+        logger object.
+        This will follow similar logic as run_stage, where a
+        logger_obj.get_logs() MUST be implemented by the user so
+        times can be retrieved and compared against the responses
+        logged in the journal db
         """
         assert logger_obj is not None
         conn = sqlite3.connect(journal_file)
@@ -108,31 +113,34 @@ class TestRunner(object):
                         'test': test.test_title,
                         'query': q,
                         'stage_num': i,
-                        'function': 'testrunner.TestRunner.run_stage_with_journal'
+                        'function':
+                            'testrunner.TestRunner.run_stage_with_journal'
                     })
             result = results[0]
             start = parser.parse(result[2])
             end = parser.parse(result[3])
             response = result[4]
             status = result[5]
-            if (stage.output.log_contains_str or stage.output.no_log_contains_str):
+            if (stage.output.log_contains_str or
+               stage.output.no_log_contains_str):
                 logger_obj.set_times(start, end)
-                lines = logger_obj.get_logs() 
+                lines = logger_obj.get_logs()
                 if stage.output.log_contains_str:
                     self.test_log(lines, stage.output.log_contains_str, False)
                 if stage.output.no_log_contains_str:
                     # The last argument means that we should negate the resp
-                    self.test_log(lines, stage.output.no_log_contains_str, True)
+                    self.test_log(lines, stage.output.no_log_contains_str,
+                                  True)
             if stage.output.response_contains_str:
                 self.test_response_str(response,
-                                   stage.output.response_contains_str)
+                                       stage.output.response_contains_str)
             if stage.output.status:
                 self.test_status(stage.output.status, status)
 
     def run_test_build_journal(self, rule_id, test, journal_file, tablename):
         """
         Build journal entries from a test within a specified rule_id
-        Pass in the rule_id, test object, and path to journal_file 
+        Pass in the rule_id, test object, and path to journal_file
         DB MUST already be instantiated from util.instantiate_database()
         """
         conn = sqlite3.connect(journal_file)
@@ -142,7 +150,8 @@ class TestRunner(object):
             response = None
             status = None
             try:
-                print('Running test %s from rule file %s' % (test.test_title, rule_id))
+                print('Running test %s from rule file %s' %
+                      (test.test_title, rule_id))
                 http_ua = http.HttpUA()
                 start = datetime.datetime.now()
                 http_ua.send_request(stage.input)
@@ -155,7 +164,8 @@ class TestRunner(object):
             finally:
                 end = datetime.datetime.now()
                 ins_q = util.get_insert_statement(tablename)
-                cur.execute(ins_q, (rule_id, test.test_title, start, end, response, status, i))
+                cur.execute(ins_q, (rule_id, test.test_title, start,
+                                    end, response, status, i))
                 conn.commit()
 
     def run_stage(self, stage, logger_obj=None, http_ua=None):
@@ -164,7 +174,7 @@ class TestRunner(object):
         input, waits for output then compares expected vs actual output
         http_ua can be passed in to persist cookies
         """
-       
+
         # Send our request (exceptions caught as needed)
         if stage.output.expect_error:
             with pytest.raises(errors.TestError) as excinfo:
@@ -179,11 +189,11 @@ class TestRunner(object):
                 http_ua = http.HttpUA()
             start = datetime.datetime.now()
             http_ua.send_request(stage.input)
-            end = datetime.datetime.now()                
-        if (stage.output.log_contains_str or stage.output.no_log_contains_str) \
-        and logger_obj is not None:
+            end = datetime.datetime.now()
+        if (stage.output.log_contains_str or
+           stage.output.no_log_contains_str) and logger_obj is not None:
             logger_obj.set_times(start, end)
-            lines = logger_obj.get_logs() 
+            lines = logger_obj.get_logs()
             if stage.output.log_contains_str:
                 self.test_log(lines, stage.output.log_contains_str, False)
             if stage.output.no_log_contains_str:

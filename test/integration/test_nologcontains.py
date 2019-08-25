@@ -1,7 +1,7 @@
-from ftw import ruleset, logchecker, testrunner
+from ftw import logchecker, testrunner
 import pytest
 import random
-import threading
+
 
 class LoggerTestObj(logchecker.LogChecker):
     def __init__(self):
@@ -11,11 +11,13 @@ class LoggerTestObj(logchecker.LogChecker):
         if self.do_nothing:
             return []
         else:
-            return [str(self.start) + ' rule-id-' + str(random.randint(10,99))]
-        
+            return [str(self.start) + ' rule-id-' +
+                    str(random.randint(10, 99))]
+
     def get_logs(self):
         logs = self.generate_random_logs()
         return logs
+
 
 @pytest.fixture
 def logchecker_obj():
@@ -24,10 +26,12 @@ def logchecker_obj():
     """
     return LoggerTestObj()
 
+
 def test_logcontains_withlog(logchecker_obj, ruleset, test):
     runner = testrunner.TestRunner()
     for stage in test.stages:
         runner.run_stage(stage, logchecker_obj)
+
 
 def test_logcontains_nolog(logchecker_obj, ruleset, test):
     logchecker_obj.do_nothing = True

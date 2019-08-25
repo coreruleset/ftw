@@ -11,12 +11,12 @@ setup(name='ftw',
       download_url='https://github.com/crs-support/ftw/tarball/1.2.0',
       include_package_data=True,
       package_data={
-        'ftw': ['util/public_suffix_list.dat']
+          'ftw': ['util/public_suffix_list.dat']
       },
-      entry_points = {
-        'pytest11': [
-            'ftw = ftw.pytest_plugin'
-        ]
+      entry_points={
+          'pytest11': [
+              'ftw = ftw.pytest_plugin'
+          ]
       },
       packages=['ftw'],
       keywords=['waf'],
@@ -26,5 +26,4 @@ setup(name='ftw',
           'pytest==2.9.1',
           'python-dateutil==2.6.0',
           'six==1.12.0'
-      ],
-     )
+      ])
