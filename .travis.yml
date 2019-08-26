@@ -5,6 +5,7 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install pytest-codestyle || true
+  - python setup.py install
 script:
   - py.test test/unit
   - py.test test/integration/test_logcontains.py --rule=test/integration/LOGCONTAINSFIXTURE.yaml
