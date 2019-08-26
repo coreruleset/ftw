@@ -20,7 +20,7 @@ from . import errors
 
 
 if PY2:
-    reload(sys)
+    reload(sys)  # pragma: no flakes
     sys.setdefaultencoding('utf8')
     escape_codec = 'string_escape'
 else:
