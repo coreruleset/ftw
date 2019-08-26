@@ -3,6 +3,9 @@ import pytest
 from . import util
 from .ruleset import Test
 
+from six.moves.BaseHTTPServer import HTTPServer
+from six.moves.SimpleHTTPServer import SimpleHTTPRequestHandler
+
 
 def get_testdata(rulesets):
     """
