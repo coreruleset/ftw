@@ -1,7 +1,7 @@
 The YAML Format
 ===============
 
-Welcome to the the FTW YAMLFormat documentation. In this document we will explain all the possible options that can be used within the YAML format. Generally this is the preferred format for writing tests in as they don't require any programming skills in order to understand and change. If you find a bug in this format please open an issue.
+Welcome to the FTW YAMLFormat documentation. In this document we will explain all the possible options that can be used within the YAML format. Generally this is the preferred format for writing tests in as they don't require any programming skills in order to understand and change. If you find a bug in this format please open an issue.
 
 Metadata Parameters
 ==================
@@ -16,7 +16,7 @@ Metadata parameters are present once per test file and are located by convention
     description: "This file contains example tests."
   ...
 ```  
-What follows are all the possible Metadata parameters that are current suported
+What follows are all the possible Metadata parameters that are current supported
 
 Author
 ------
@@ -34,7 +34,7 @@ Author
 
 Description
 -----------
-**Description**: A breif description of what the following tests are meant to accomplish
+**Description**: A brief description of what the following tests are meant to accomplish
 
 **Syntax:** ```description: "<string>"```
 
@@ -78,7 +78,7 @@ Name
 
 Tests Parameters
 ==================
-The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Paramaters
+The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Parameters
 
 Test_title
 -----------
@@ -108,10 +108,25 @@ Stages
 
 **Added Version:** 0.1
 
+Desc
+-----------
+**Description**: Brief information about the test
+
+**Syntax:** ```desc: "<string>"```
+
+**Example Usage:** ```desc: Scanner identification based on custom header```
+
+**Default Value:** None
+
+**Scope:** Tests
+
+**Added Version:** -
+
+*Note: this keyword isn't mandatory, and not part of the structure of test case, ftw doesn't use it*
 
 Stage Parameters
 ==================
-There can be multiple stages per test. Each stage represents a single request/response. Each stage paramater encapsalates an input and output parameters.
+There can be multiple stages per test. Each stage represents a single request/response. Each stage parameter encapsalates an input and output parameters.
 
 Input
 -----------
@@ -303,7 +318,7 @@ Data
 
 Save_cookie
 -----------
-**Description**: If there are multiple stages and save cookie is set, it will automaticlly be provided in the next stage if the site in question provides the Set-Cookie response header.
+**Description**: If there are multiple stages and save cookie is set, it will automatically be provided in the next stage if the site in question provides the Set-Cookie response header.
 
 **Syntax:** ```save_cookie: (true|false)```
 
@@ -317,7 +332,7 @@ Save_cookie
 
 Stop_magic
 -----------
-**Description**: The framework will take care of certain things automaticlly like setting content-length, encoding, etc. When stop_magic is on, the framework will not do anything automagically. 
+**Description**: The framework will take care of certain things automatically like setting content-length, encoding, etc. When stop_magic is on, the framework will not do anything automagically. 
 
 **Syntax:** ```stop_magic: (true|false)```
 
@@ -360,6 +375,7 @@ Raw_request
 **Added Version:** 0.1
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
+
 Output Parameters
 ==================
 Items within the output represent actions that should be taken as a result of the HTTP request being made.
