@@ -96,7 +96,7 @@ Test_title
 
 Stages
 -----------
-**Description**: A parameter to encapsalate all the different stages of a give test
+**Description**: A parameter to encapsulate all the different stages of a give test
 
 **Syntax:** ```stages: n*<individual stages>```
 
@@ -126,7 +126,7 @@ Desc
 
 Stage Parameters
 ==================
-There can be multiple stages per test. Each stage represents a single request/response. Each stage parameter encapsalates an input and output parameters.
+There can be multiple stages per test. Each stage represents a single request/response. Each stage parameter encapsulates an input and output parameters.
 
 Input
 -----------
@@ -284,7 +284,7 @@ Version
 
 Data
 -----------
-**Description**: The optional data porition of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string or as a YAML list.
+**Description**: The optional data portion of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string or as a YAML list.
 
 **Syntax:** ```data: "<string|YAML list>"```
 
