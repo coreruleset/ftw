@@ -18,7 +18,7 @@ Metadata parameters are present once per test file and are located by convention
 ```  
 What follows are all the possible Metadata parameters that are current supported
 
-Author
+author
 ------
 **Description**: Lists the author(s).
 
@@ -32,7 +32,7 @@ Author
 
 **Added Version:** 0.1
 
-Description
+description
 -----------
 **Description**: A brief description of what the following tests are meant to accomplish
 
@@ -46,8 +46,8 @@ Description
 
 **Added Version:** 0.1
 
-Enabled
------------
+enabled
+-------
 **Description**: Determines if the tests in the file will be run 
 
 **Syntax:** ```enabled: (true|false)```
@@ -60,13 +60,13 @@ Enabled
 
 **Added Version:** 0.1
 
-Name
------------
+name
+----
 **Description**: A name for the test file 
 
-**Syntax:** ```enabled: (true|false)```
+**Syntax:** ```name: "<string>"```
 
-**Example Usage:** ```enabled: false```
+**Example Usage:** ```name: "test.yaml"```
 
 **Default Value:** ""
 
@@ -77,11 +77,11 @@ Name
 *Note: The name specified here is used as part of the test execution name, in conjunction with the test_title.
 
 Tests Parameters
-==================
+================
 The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Parameters
 
-Test_title
------------
+test_title
+----------
 **Description**: Information about the test being performed, this will be included as the test name when run.
 
 **Syntax:** ```test_title: "<string>"```
@@ -94,8 +94,8 @@ Test_title
 
 **Added Version:** 0.1
 
-Stages
------------
+stages
+------
 **Description**: A parameter to encapsulate all the different stages of a give test
 
 **Syntax:** ```stages: n*<individual stages>```
@@ -108,13 +108,13 @@ Stages
 
 **Added Version:** 0.1
 
-Desc
------------
+desc
+----
 **Description**: Brief information about the test
 
 **Syntax:** ```desc: "<string>"```
 
-**Example Usage:** ```desc: Scanner identification based on custom header```
+**Example Usage:** ```desc: "Scanner identification based on custom header"```
 
 **Default Value:** None
 
@@ -125,11 +125,11 @@ Desc
 *Note: this keyword isn't mandatory, and not part of the structure of test case, ftw doesn't use it*
 
 Stage Parameters
-==================
+================
 There can be multiple stages per test. Each stage represents a single request/response. Each stage parameter encapsulates an input and output parameters.
 
-Input
------------
+input
+-----
 **Description**: A container for the parameters that will be used to construct an HTTP request
 
 **Syntax:** ```input: <input information>```
@@ -148,8 +148,8 @@ stage:
 
 **Added Version:** 0.1
 
-Output
------------
+output
+------
 **Description**: A container for parameters that will describe what do after the HTTP request is sent.
 
 **Syntax:** ```output: <output information>```
@@ -167,30 +167,30 @@ stage:
 **Added Version:** 0.1
 
 Input Parameters
-==================
+================
 Items within input represent parameters that affect the construction and processing of the resulting HTTP packet.
 
 dest_addr
------------
+---------
 **Description**: What address the packet should be sent to at the IP level
 
-**Syntax:** ```input: <IP or DNS name>```
+**Syntax:** ```dest_addr: <IP or DNS name>```
 
 **Example Usage:** ```dest_addr: "129.21.3.17"```
 
-**Default Value:** "127.0.0.1"
+**Default Value:** "localhost"
 
 **Scope:** Input
 
 **Added Version:** 0.1
 
 port
------------
+----
 **Description**: What port the packet should be sent to at the IP level
 
-**Syntax:** ```input: <Integer>```
+**Syntax:** ```port: <Integer>```
 
-**Example Usage:** ```dest_addr: 8080```
+**Example Usage:** ```port: 8080```
 
 **Default Value:** 80
 
@@ -202,9 +202,9 @@ method
 ------
 **Description**: What HTTP method should be used within the HTTP portion of the packet
 
-**Syntax:** ```input: <string>```
+**Syntax:** ```method: "<string>"```
 
-**Example Usage:** ```dest_addr: "GET"```
+**Example Usage:** ```method: "POST"```
 
 **Default Value:** "GET"
 
@@ -213,7 +213,7 @@ method
 **Added Version:** 0.1
 
 headers
------------
+-------
 **Description**: A collection that will be used to fill the header portion of the HTTP request
 
 **Syntax:** 
@@ -241,7 +241,7 @@ headers:
 *Note: If a Content-Type is passed and a charset attribute is set, FTW will try to encode the data with that codec. It must be a valid Python codec and the default is UTF-8.*
 
 protocol
------------
+--------
 **Description**: Specifies if the request should be using SSL/TLS or not
 
 **Syntax:** ```protocol: (http|https)
@@ -254,13 +254,13 @@ protocol
 
 **Added Version:** 0.1
 
-Uri
------------
+uri
+---
 **Description**: The URI value that should be placed into the request-line of the HTTP request
 
-**Syntax:** ```uri: <string>```
+**Syntax:** ```uri: "<string>"```
 
-**Example Usage:** ```uri: /test.php?param=value```
+**Example Usage:** ```uri: "/test.php?param=value"```
 
 **Default Value:** "/"
 
@@ -268,8 +268,8 @@ Uri
 
 **Added Version:** 0.1
 
-Version
------------
+version
+-------
 **Description**: The version value that will be provided in the request-line of the HTTP request
 
 **Syntax:** ```version: "<string>"```
@@ -282,8 +282,8 @@ Version
 
 **Added Version:** 0.1
 
-Data
------------
+data
+----
 **Description**: The optional data portion of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string or as a YAML list.
 
 **Syntax:** ```data: "<string|YAML list>"```
@@ -306,7 +306,7 @@ Data
     - "----------397236876--"
 ```
 
-**Default Value:** "HTTP/1.1"
+**Default Value:** ""
 
 **Scope:** Input
 
@@ -315,8 +315,7 @@ Data
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on.*
 *Note: if urlencoded content-type header is provided and parameters aren't in name=value form, data will be made empty, unless stop_magic is on.*
 
-
-Save_cookie
+save_cookie
 -----------
 **Description**: If there are multiple stages and save cookie is set, it will automatically be provided in the next stage if the site in question provides the Set-Cookie response header.
 
@@ -330,8 +329,8 @@ Save_cookie
 
 **Added Version:** 0.1
 
-Stop_magic
------------
+stop_magic
+----------
 **Description**: The framework will take care of certain things automatically like setting content-length, encoding, etc. When stop_magic is on, the framework will not do anything automagically. 
 
 **Syntax:** ```stop_magic: (true|false)```
@@ -344,8 +343,8 @@ Stop_magic
 
 **Added Version:** 0.1
 
-Encoded_request
------------
+encoded_request
+---------------
 **Description**: This argument will take a base64 encoded string that will be decoded and sent through as the request. It will override all other settings  
 
 **Syntax:** ```encoded_request: <Base64 string>```
@@ -360,7 +359,7 @@ Encoded_request
 
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
 
-Raw_request
+raw_request
 -----------
 **Description**: This argument will take a unencoded string that will be sent through as the request. It will override all other settings  
 
@@ -377,16 +376,16 @@ Raw_request
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on. (TODO)*
 
 Output Parameters
-==================
+=================
 Items within the output represent actions that should be taken as a result of the HTTP request being made.
 
-Status
------------
+status
+------
 **Description**: Checks the response code of the response to see if it matches the provided value
 
 **Syntax:** ```status: <integer>|<integer list>```
 
-**Example Usage:** ```status: 200```
+**Example Usager** ```status: 200```
 
 **Default Value:** None
 
@@ -395,7 +394,7 @@ Status
 **Added Version:** 0.1
 
 response_contains
------------
+-----------------
 **Description**: Checks the entire response against the regular expression provided.
 
 **Syntax:** ```response_contains: "<regex string>"```
@@ -409,7 +408,7 @@ response_contains
 **Added Version:** 0.1
 
 log_contains
------------
+------------
 **Description**: Will use the provided LogChecker (must be supplied) and run the provided regex against each one of the logs provided by LogChecker.get_logs() looking for a match. If it doesn't find a match it will raise an assertion
 
 **Syntax:** ```log_contains: "<regex string>"```
@@ -423,7 +422,7 @@ log_contains
 **Added Version:** 0.1
 
 no_log_contains
------------
+---------------
 **Description**: Will use the provided LogChecker (must be supplied) and run the provided regex against each one of the logs provided by LogChecker.get_logs() looking for a match. However, if it finds a match it will raise an assertion.
 
 **Syntax:** ```no_log_contains: "<regex string>"```
@@ -436,15 +435,15 @@ no_log_contains
 
 **Added Version:** 0.1
 
-Expect_error
------------
+expect_error
+------------
 **Description**: Sometimes it will happen that FTW cannot receive a response and will throw an error (i.e simple requests or 408s). As a result sometimes there are requests that can be sent that will always error back and are not expected to change. You can catch these 'TestErrors using Expect_error 
 
-**Syntax:** ```expect_error: <True|False>```
+**Syntax:** ```expect_error: <true|false>```
 
-**Example Usage:** ```expect_error: True```
+**Example Usage:** ```expect_error: true```
 
-**Default Value:** False
+**Default Value:** false
 
 **Scope:** Output
 
