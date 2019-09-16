@@ -1,7 +1,5 @@
-from ftw import ruleset, logchecker, testrunner
-import pytest
-import random
-import threading
+from ftw import testrunner
+
 
 def test_multipart(ruleset, test):
     runner = testrunner.TestRunner()

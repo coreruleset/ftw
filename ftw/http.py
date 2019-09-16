@@ -1,8 +1,6 @@
-#!/usr/bin/env python
 from __future__ import print_function
 import socket
 import ssl
-import string
 import errno
 import time
 import gzip
@@ -14,17 +12,20 @@ import zlib
 import encodings
 from IPy import IP
 
-from six import BytesIO, PY2, b, ensure_binary, ensure_str, iteritems, text_type
+from six import BytesIO, PY2, b, ensure_binary, ensure_str, iteritems, \
+    text_type
 from six.moves import http_cookies
 
 from . import errors
 
+
 if PY2:
-    reload(sys)
+    reload(sys)  # pragma: no flakes
     sys.setdefaultencoding('utf8')
     escape_codec = 'string_escape'
 else:
     escape_codec = 'unicode_escape'
+
 
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
@@ -74,7 +75,8 @@ class HttpResponse(object):
         except ValueError:
             origin_is_ip = False
         for cookie_morsals in cookie.values():
-            # If the coverdomain is blank or the domain is an IP set the domain to be the origin
+            # If the coverdomain is blank or the domain is an IP
+            # set the domain to be the origin
             if cookie_morsals['domain'] == '' or origin_is_ip:
                 # We want to always add a domain so it's easy to parse later
                 return (cookie, self.dest_addr)
@@ -90,9 +92,10 @@ class HttpResponse(object):
                         first_non_dot = i
                         break
                 cover_domain = cover_domain[first_non_dot:]
-                # We must parse the coverDomain to make sure its not in the suffix list
+                # We must parse the coverDomain to make sure its
+                # not in the suffix list
                 psl_path = os.path.dirname(__file__) + os.path.sep + \
-                'util' + os.path.sep + 'public_suffix_list.dat'
+                    'util' + os.path.sep + 'public_suffix_list.dat'
                 # Check if the public suffix list is present in the ftw dir
                 if os.path.exists(psl_path):
                     pass
@@ -106,7 +109,8 @@ class HttpResponse(object):
                 try:
                     with open(psl_path, 'r') as public_suffixs:
                         for line in public_suffixs:
-                            if line[:2] == '//' or line[0] == ' ' or line[0].strip() == '':
+                            if line[:2] == '//' or line[0] == ' ' or \
+                               line[0].strip() == '':
                                 continue
                             if cover_domain == line.strip():
                                 return False
@@ -119,7 +123,7 @@ class HttpResponse(object):
                         })
                 # Generate Origin Domain TLD
                 i = self.dest_addr.rfind('.')
-                o_tld = self.dest_addr[i+1:]
+                o_tld = self.dest_addr[i + 1:]
                 # if our cover domain is the origin TLD we ignore
                 # Quick sanity check
                 if cover_domain == o_tld:
@@ -223,6 +227,7 @@ class HttpResponse(object):
         self.headers = response_headers
         self.data = response_data
 
+
 class HttpUA(object):
     """
     Act as the User Agent for our regression testing
@@ -259,7 +264,7 @@ class HttpUA(object):
                 {
                     'msg': err,
                     'function': 'http.HttpUA.send_request'
-                })  			
+                })
         finally:
             self.get_response()
 
@@ -329,31 +334,39 @@ class HttpUA(object):
                     provided_cookie.load(self.request_object.headers['cookie'])
                 except http_cookies.CookieError as err:
                     raise errors.TestError(
-                        'Error processing the existing cookie into a SimpleCookie',
+                        'Error processing the existing cookie into a '
+                        'SimpleCookie',
                         {
                             'msg': str(err),
-                            'set_cookie': str(self.request_object.headers['cookie']),
+                            'set_cookie':
+                                str(self.request_object.headers['cookie']),
                             'function': 'http.HttpResponse.build_request'
                         })
                 result_cookie = {}
                 for cookie_key, cookie_morsal in iteritems(provided_cookie):
-                    result_cookie[cookie_key] = provided_cookie[cookie_key].value
+                    result_cookie[cookie_key] = \
+                        provided_cookie[cookie_key].value
                 for cookie in available_cookies:
                     for cookie_key, cookie_morsal in iteritems(cookie):
                         if cookie_key in result_cookie.keys():
-                            # we don't overwrite a user specified cookie with a saved one
+                            # we don't overwrite a user specified
+                            # cookie with a saved one
                             pass
                         else:
-                            result_cookie[cookie_key] = cookie[cookie_key].value
+                            result_cookie[cookie_key] = \
+                                cookie[cookie_key].value
                 for key, value in iteritems(result_cookie):
-                    cookie_value += (text_type(key) + '=' + text_type(value) + '; ')
+                    cookie_value += (text_type(key) + '=' +
+                                     text_type(value) + '; ')
                     # Remove the trailing semicolon
                 cookie_value = cookie_value[:-2]
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
                     for cookie_key, cookie_morsal in iteritems(cookie):
-                        cookie_value += (text_type(cookie_key) + '=' + text_type(cookie_morsal.coded_value) + '; ')
+                        cookie_value += (text_type(cookie_key) + '=' +
+                                         text_type(cookie_morsal.coded_value) +
+                                         '; ')
                         # Remove the trailing semicolon
                     cookie_value = cookie_value[:-2]
                     self.request_object.headers['cookie'] = cookie_value
@@ -362,22 +375,28 @@ class HttpUA(object):
         headers = ''
         if self.request_object.headers != {}:
             for hname, hvalue in iteritems(self.request_object.headers):
-                headers += text_type(hname) + ': ' + text_type(hvalue) + self.CRLF
+                headers += text_type(hname) + ': ' + \
+                    text_type(hvalue) + self.CRLF
         request = request.replace('#headers#', headers)
 
         # If we have data append it
         if self.request_object.data != '':
             # Before we do that see if that is a charset
             encoding = "utf-8"
-            # Check to see if we have a content type and magic is off (otherwise UTF-8)
-            if 'Content-Type' in self.request_object.headers.keys() and self.request_object.stop_magic is False:
+            # Check to see if we have a content type and magic is
+            # off (otherwise UTF-8)
+            if 'Content-Type' in self.request_object.headers.keys() and \
+               self.request_object.stop_magic is False:
                 pattern = re.compile(r'\;\s{0,1}?charset\=(.*?)(?:$|\;|\s)')
-                m = re.search(pattern, self.request_object.headers['Content-Type'])
+                m = re.search(pattern,
+                              self.request_object.headers['Content-Type'])
                 if m:
-                    possible_choices = list(set(encodings.aliases.aliases.keys())) + list(set(encodings.aliases.aliases.values()))
+                    possible_choices = \
+                        list(set(encodings.aliases.aliases.keys())) + \
+                        list(set(encodings.aliases.aliases.values()))
                     choice = m.group(1)
                     # Python will allow these aliases but doesn't list them
-                    choice = choice.replace('-','_')
+                    choice = choice.replace('-', '_')
                     choice = choice.lower()
                     if choice in possible_choices:
                         encoding = choice
@@ -388,10 +407,11 @@ class HttpUA(object):
                     'Error encoding the data with the charset specified',
                     {
                         'msg': str(err),
-                        'Content-Type': str(self.request_object.headers['Content-Type']),
+                        'Content-Type':
+                            str(self.request_object.headers['Content-Type']),
                         'data': text_type(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
-                    })                
+                    })
             request = request.replace('#data#', ensure_str(data))
         else:
             request = request.replace('#data#', '')
@@ -404,7 +424,7 @@ class HttpUA(object):
                         'function': 'http.HttpUA.build_request'
                     })
             request = self.request_object.raw_request
-            # We do this regardless of magic if you want to send a literal 
+            # We do this regardless of magic if you want to send a literal
             # '\' 'r' or 'n' use encoded request.
             request = b(request).decode(escape_codec)
         if self.request_object.encoded_request is not None:
@@ -443,11 +463,11 @@ class HttpUA(object):
                     pass
                 # SSL will return SSLWantRead instead of EAGAIN
                 elif sys.platform == 'win32' and \
-                err.errno == errno.WSAEWOULDBLOCK:
-                        pass
+                        err.errno == errno.WSAEWOULDBLOCK:
+                    pass
                 elif (self.request_object.protocol == 'https' and
-                    err.args[0] == ssl.SSL_ERROR_WANT_READ):
-                        continue
+                      err.args[0] == ssl.SSL_ERROR_WANT_READ):
+                    continue
                 # If we didn't it's an error
                 else:
                     raise errors.TestError(
@@ -468,7 +488,7 @@ class HttpUA(object):
                     'proto': self.request_object.protocol,
                     'msg': 'Please send the request and check Wireshark',
                     'function': 'http.HttpUA.get_response'
-                })                                    
+                })
         self.response_object = HttpResponse(b''.join(our_data), self)
         try:
             self.sock.shutdown(1)
@@ -479,4 +499,4 @@ class HttpUA(object):
                 {
                     'msg': err,
                     'function': 'http.HttpUA.get_response'
-                })  
+                })
