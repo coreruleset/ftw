@@ -137,7 +137,8 @@ class TestRunner(object):
             if stage.output.status:
                 self.test_status(stage.output.status, status)
 
-    def run_test_build_journal(self, rule_id, test, journal_file, tablename):
+    def run_test_build_journal(self, rule_id, test, journal_file,
+                               tablename, http_ua=None):
         """
         Build journal entries from a test within a specified rule_id
         Pass in the rule_id, test object, and path to journal_file
@@ -152,7 +153,8 @@ class TestRunner(object):
             try:
                 print('Running test %s from rule file %s' %
                       (test.test_title, rule_id))
-                http_ua = http.HttpUA()
+                if not http_ua:
+                    http_ua = http.HttpUA()
                 start = datetime.datetime.now()
                 http_ua.send_request(stage.input)
                 response = http_ua.response_object.response
