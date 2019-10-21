@@ -35,7 +35,7 @@ def test_search3():
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     runner.test_response(http_ua.response_object,
-                         re.compile('established to be used for'))
+                         re.compile('is for use in illustrative'))
 
 
 # Should return a success because we found our regex
