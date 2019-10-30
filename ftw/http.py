@@ -265,8 +265,7 @@ class HttpUA(object):
                     'msg': err,
                     'function': 'http.HttpUA.send_request'
                 })
-        finally:
-            self.get_response()
+        self.get_response()
 
     def build_socket(self):
         """
