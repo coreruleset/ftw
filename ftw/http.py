@@ -63,7 +63,15 @@ class HttpResponse(object):
                         'function': 'http.HttpResponse.parse_content_encoding'
                     })
         elif response_headers['content-encoding'] == 'deflate':
-            response_data = zlib.decompress(response_data, -zlib.MAX_WBITS)
+            try:
+                response_data = zlib.decompress(response_data, -zlib.MAX_WBITS)
+            except zlib.error:
+                raise errors.TestError(
+                    'Invalid or missing deflate data found',
+                    {
+                        'response_data': str(response_data),
+                        'function': 'http.HttpResponse.parse_content_encoding'
+                    })
         else:
             raise errors.TestError(
                 'Received unknown Content-Encoding',

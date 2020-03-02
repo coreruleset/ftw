@@ -177,6 +177,15 @@ def test_invalid_gzip():
                           http_ua)
 
 
+def test_invalid_deflate():
+    """Invalid deflate content"""
+    http_ua = http.HttpUA()
+    with pytest.raises(errors.TestError):
+        http.HttpResponse("HTTP1.1 200 OK\r\n"
+                          "Content-Encoding: deflate\r\n\r\ninvalid data",
+                          http_ua)
+
+
 def test1():
     """Typical request specified should be valid"""
     x = ruleset.Input(dest_addr="example.com", headers={"Host": "example.com"})
@@ -359,7 +368,7 @@ def test19():
     assert http_ua.request_object.data == "test=hello%3Fx"
 
 
-def test20():
+def test_deflate():
     """Accept-Encoding deflate"""
     x = ruleset.Input(dest_addr="example.com", version="HTTP/1.0",
                       headers={"Host": "example.com",
