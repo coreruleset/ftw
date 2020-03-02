@@ -23,7 +23,7 @@ setup(name='ftw',
       install_requires=[
           'IPy==0.83',
           'PyYAML==4.2b1',
-          'pytest==2.9.1',
+          'pytest==4.6',
           'python-dateutil==2.6.0',
           'six==1.12.0'
       ])
