@@ -118,12 +118,12 @@ test_foo.py::test_bar[ruleset1-foo.yaml_ruleid_1235] PASSED
 
 2 tests were ran as specified in `foo.yaml`, and `py.test` shows verbose logging on which test was ran and what rule was ran. So we know `ruleid_1234` and `ruleid_1235` passed. If these errored out, you can investigate each rule to see what went wrong. 
 
-These passed because the `output` directive in both rules specified an expected `status` directive. The webserver returned 200 and 404, respectively, and made the whole test suite passed. You can also pass in `html_contains: "^regex$"` to have FTW check for a pattern within the html_response.
+These passed because the `output` directive in both rules specified an expected `status` directive. The webserver returned 200 and 404, respectively, and made the whole test suite passed. You can also pass in `response_contains: "^regex$"` to have FTW check for a pattern within the html response.
 
 Step 4 - Log integration
 ==
 
-Although `status` and `html_contains` may be useful, it could give attackers information on how your WAF interacts with certain payloads. Because of this, you might want to be more stealthy in how you respond to certain payloads, but you still need to verify that the rules are firing. This is where the `log_contains` directive can be used to check your WAF logs.
+Although `status` and `response_contains` may be useful, it could give attackers information on how your WAF interacts with certain payloads. Because of this, you might want to be more stealthy in how you respond to certain payloads, but you still need to verify that the rules are firing. This is where the `log_contains` directive can be used to check your WAF logs.
 
 If you add a `log_contains: "^regex$"` directive to the `output` field in yaml file, `ftw` will use that regex on a list of log lines to see if that pattern is present. The issue here is that you have to write the integration and send `ftw` the loglines for it to run the regex on. This makes `ftw` extendible because it can integrate with virtually any log system (API, filesystem) as long as you have programmatic access to it.
 

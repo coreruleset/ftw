@@ -1,8 +1,5 @@
-from ftw.ftw import ruleset, testrunner, http, errors
-import pytest
-import re
-import random
-import threading
+from ftw import testrunner
+
 
 def test_expecterror(ruleset, test):
     runner = testrunner.TestRunner()

@@ -22,7 +22,7 @@
               uri: "/"
             output: 
               status: 302
-              html_contains: "Set-Cookie: TS01293935="
+              response_contains: "Set-Cookie: TS01293935="
           stage: 
             input: 
               save_cookie: true
@@ -36,7 +36,7 @@
               uri: "/"
             output: 
               status: 302
-              html_contains: "Set-Cookie: TS01293935="
+              response_contains: "Set-Cookie: TS01293935="
     - 
       test_title: "Multi-Stage w\\ Cookie rule disabled"
       enabled: false
@@ -55,7 +55,7 @@
               uri: "/"
             output: 
               status: 302
-              html_contains: "Set-Cookie: TS01293935="
+              response_contains: "Set-Cookie: TS01293935="
           stage: 
             input: 
               save_cookie: true
@@ -69,4 +69,4 @@
               uri: "/"
             output: 
               status: 302
-              html_contains: "Set-Cookie: TS01293935="
+              response_contains: "Set-Cookie: TS01293935="

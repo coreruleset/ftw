@@ -1,19 +1,21 @@
 from __future__ import print_function
-
 import yaml
 import os
 import sqlite3
-import ruleset
 from glob import glob
+
+from . import ruleset
+
 
 def get_insert_statement(table_name):
     """
     Prepare SQL statement to be inserted into the FTW journal
     """
-    q = 'INSERT INTO {tn} (rule_id, test_id, time_start, time_end, response_blob, status_code, stage) VALUES(?, ?, ?, ?, ?, ?, ?)'.format(
-        tn=table_name)
+    q = 'INSERT INTO {tn} (rule_id, test_id, time_start, time_end, ' \
+        'response_blob, status_code, stage) VALUES(?, ?, ?, ?, ?, ?, ?)'. \
+        format(tn=table_name)
     return q
-    
+
 
 def instantiate_database(sqlite_file='ftwj.sqlite'):
     """
@@ -37,25 +39,25 @@ def instantiate_database(sqlite_file='ftwj.sqlite'):
     conn = sqlite3.connect(sqlite_file)
     cur = conn.cursor()
 
-    q = 'CREATE TABLE {tn}({col1} {col1_t},{col2} {col2_t},{col3} {col3_t},{col4} {col4_t},{col5} {col5_t},{col6} {col6_t},{col7} {col7_t})'.format(
-        tn=table_name,
-        col1=col1, col1_t=col1_t,
-        col2=col2, col2_t=col2_t,
-        col3=col3, col3_t=col3_t,
-        col4=col4, col4_t=col4_t,
-        col5=col5, col5_t=col5_t,
-        col6=col6, col6_t=col6_t,
-        col7=col7, col7_t=col7_t)
+    q = 'CREATE TABLE {tn}({col1} {col1_t}, {col2} {col2_t}, ' \
+        '{col3} {col3_t}, {col4} {col4_t}, {col5} {col5_t}, ' \
+        '{col6} {col6_t}, {col7} {col7_t})'. \
+        format(tn=table_name, col1=col1, col1_t=col1_t, col2=col2,
+               col2_t=col2_t, col3=col3, col3_t=col3_t, col4=col4,
+               col4_t=col4_t, col5=col5, col5_t=col5_t, col6=col6,
+               col6_t=col6_t, col7=col7, col7_t=col7_t)
     cur.execute(q)
     conn.commit()
     conn.close()
+
 
 def get_rulesets(ruledir, recurse):
     """
     List of ruleset objects extracted from the yaml directory
     """
     if os.path.isdir(ruledir) and recurse:
-        yaml_files = [y for x in os.walk(ruledir) for y in glob(os.path.join(x[0], '*.yaml'))]
+        yaml_files = [y for x in os.walk(ruledir)
+                      for y in glob(os.path.join(x[0], '*.yaml'))]
     elif os.path.isdir(ruledir) and not recurse:
         yaml_files = get_files(ruledir, 'yaml')
     elif os.path.isfile(ruledir):
@@ -65,6 +67,7 @@ def get_rulesets(ruledir, recurse):
     for extracted_yaml in extracted_files:
         rulesets.append(ruleset.Ruleset(extracted_yaml))
     return rulesets
+
 
 def get_files(directory, extension):
     """

@@ -1,5 +1,6 @@
 import pytest
-from ftw.ftw import testrunner, errors
+from ftw import testrunner, errors
+
 
 def test_default(ruleset, test, destaddr, port, protocol):
     """
@@ -18,5 +19,5 @@ def test_default(ruleset, test, destaddr, port, protocol):
             runner.run_stage(stage, None)
     except errors.TestError as e:
         e.args[1]['meta'] = ruleset.meta
-        pytest.fail('Failure! Message -> {0}, Context -> {1}'
-                        .format(e.args[0],e.args[1]))
+        pytest.fail('Failure! Message -> {0}, Context -> {1}'.format(
+                    e.args[0], e.args[1]))
