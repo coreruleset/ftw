@@ -295,7 +295,8 @@ class HttpUA(object):
             if self.request_object.protocol == 'https':
                 context = ssl.SSLContext(ssl.PROTOCOL_TLS)
                 context.set_ciphers(self.CIPHERS)
-                self.sock = context.wrap_socket(self.sock, server_hostname=self.request_object.dest_addr)
+                self.sock = context.wrap_socket(
+                    self.sock, server_hostname=self.request_object.dest_addr)
             self.sock.connect(
                 (self.request_object.dest_addr, self.request_object.port))
         except socket.error as msg:
