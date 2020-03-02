@@ -23,6 +23,7 @@
             output: 
               status: 302
               response_contains: "Set-Cookie: TS01293935="
+        -
           stage: 
             input: 
               save_cookie: true
@@ -56,6 +57,7 @@
             output: 
               status: 302
               response_contains: "Set-Cookie: TS01293935="
+        -
           stage: 
             input: 
               save_cookie: true
