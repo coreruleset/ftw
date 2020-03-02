@@ -379,14 +379,12 @@ def test_deflate():
     assert http_ua.response_object.headers["content-encoding"] == "deflate"
 
 
-def test_valid_gzip():
-    """Valid gzip content"""
+def test_gzip():
+    """Accept-Encoding gzip"""
+    x = ruleset.Input(dest_addr="example.com", version="HTTP/1.0",
+                      headers={"Host": "example.com",
+                               "Accept-Encoding": "gzip"})
     http_ua = http.HttpUA()
-    response_object = http.HttpResponse("HTTP/1.1 200 OK\r\n"
-                                        "Content-Encoding: gzip\r\n\r\n"
-                                        "\x1f\x8b\x08\x00\x61\xe7\x5c\x5e"
-                                        "\x02\xff\xcb\x48\xcd\xc9\xc9\x57"
-                                        "\x28\xcf\x2f\xca\x49\x01\x00\x85"
-                                        "\x11\x4a\x0d\x0b\x00\x00\x00",
-                                        http_ua)
-    assert response_object.data == "hello world"
+    http_ua.send_request(x)
+    assert http_ua.response_object.status == 200
+    assert http_ua.response_object.headers["content-encoding"] == "gzip"
