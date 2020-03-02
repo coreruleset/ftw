@@ -168,6 +168,15 @@ def test_error4():
         http.HttpResponse("HTTP1.1 OK\r\n", http_ua)
 
 
+def test_invalid_gzip():
+    """Invalid gzip content"""
+    http_ua = http.HttpUA()
+    with pytest.raises(errors.TestError):
+        http.HttpResponse("HTTP1.1 200 OK\r\n"
+                          "Content-Encoding: gzip\r\n\r\ninvalid data",
+                          http_ua)
+
+
 def test1():
     """Typical request specified should be valid"""
     x = ruleset.Input(dest_addr="example.com", headers={"Host": "example.com"})
@@ -359,3 +368,16 @@ def test20():
     http_ua.send_request(x)
     assert http_ua.response_object.status == 200
     assert http_ua.response_object.headers["content-encoding"] == "deflate"
+
+
+def test_valid_gzip():
+    """Valid gzip content"""
+    http_ua = http.HttpUA()
+    response_object = http.HttpResponse("HTTP/1.1 200 OK\r\n"
+                                        "Content-Encoding: gzip\r\n\r\n"
+                                        "\x1f\x8b\x08\x00\x61\xe7\x5c\x5e"
+                                        "\x02\xff\xcb\x48\xcd\xc9\xc9\x57"
+                                        "\x28\xcf\x2f\xca\x49\x01\x00\x85"
+                                        "\x11\x4a\x0d\x0b\x00\x00\x00",
+                                        http_ua)
+    assert response_object.data == "hello world"
