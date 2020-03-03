@@ -1,4 +1,5 @@
 from __future__ import print_function
+import brotli
 import socket
 import ssl
 import errno
@@ -50,7 +51,17 @@ class HttpResponse(object):
         Parses a response that contains Content-Encoding to retrieve
         response_data
         """
-        if response_headers['content-encoding'] == 'gzip':
+        if response_headers['content-encoding'] == 'br':
+            try:
+                response_data = brotli.decompress(response_data)
+            except brotli.error:
+                raise errors.TestError(
+                    'Invalid or missing brotli data found',
+                    {
+                        'response_data': str(response_data),
+                        'function': 'http.HttpResponse.parse_content_encoding'
+                    })
+        elif response_headers['content-encoding'] == 'gzip':
             buf = BytesIO(response_data)
             zipbuf = gzip.GzipFile(fileobj=buf)
             try:

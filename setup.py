@@ -21,6 +21,7 @@ setup(name='ftw',
       packages=['ftw'],
       keywords=['waf'],
       install_requires=[
+          'Brotli==1.0.7',
           'IPy==0.83',
           'PyYAML==4.2b1',
           'pytest==4.6',
