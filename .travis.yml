@@ -14,7 +14,7 @@ script:
   - py.test test/integration/test_htmlcontains.py --rule=test/integration/HTMLCONTAINSFIXTURE.yaml
   - py.test test/integration/test_http.py
   - py.test test/integration/test_cookie.py --rule=test/integration/COOKIEFIXTURE.yaml
-  - py.test test/integration/test_multipart.py --rule=test/integration/MULTIPART.yaml
-  - py.test test/integration/test_expecterror.py --rule=test/integration/EXPECTERRORFIXTURE.yaml
+  - py.test test/integration/test_runner.py --rule=test/integration/MULTIPART.yaml
+  - py.test test/integration/test_runner.py --rule=test/integration/EXPECTERRORFIXTURE.yaml
   - py.test --pycodestyle ftw || true
   - py.test --flakes ftw
