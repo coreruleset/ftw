@@ -12,32 +12,32 @@
           stage: 
             input: 
               save_cookie: true
-              dest_addr: "ieee.org"
+              dest_addr: "www.ieee.org"
               method: "GET"
-              port: 80
+              port: 443
               headers: 
                   User-Agent: "Foo"
-                  Host: "ieee.org"
-              protocol: "http"
+                  Host: "www.ieee.org"
+              protocol: "https"
               uri: "/"
             output: 
-              status: 302
-              response_contains: "Set-Cookie: TS01293935="
+              status: 200
+              response_contains: "Set-Cookie: TS01247332="
         -
           stage: 
             input: 
               save_cookie: true
-              dest_addr: "ieee.org"
+              dest_addr: "www.ieee.org"
               method: "GET"
-              port: 80
+              port: 443
               headers: 
                   User-Agent: "Foo"
-                  Host: "ieee.org"
-              protocol: "http"
+                  Host: "www.ieee.org"
+              protocol: "https"
               uri: "/"
             output: 
-              status: 302
-              response_contains: "Set-Cookie: TS01293935="
+              status: 200
+              response_contains: "Set-Cookie: TS01247332="
     - 
       test_title: "Multi-Stage w\\ Cookie rule disabled"
       enabled: false
@@ -46,29 +46,29 @@
           stage: 
             input: 
               save_cookie: true
-              dest_addr: "ieee.org"
+              dest_addr: "www.ieee.org"
               method: "GET"
-              port: 80
+              port: 443
               headers: 
                   User-Agent: "Foo"
-                  Host: "ieee.org"
-              protocol: "http"
+                  Host: "www.ieee.org"
+              protocol: "https"
               uri: "/"
             output: 
               status: 302
-              response_contains: "Set-Cookie: TS01293935="
+              response_contains: "Set-Cookie: TS01247332="
         -
           stage: 
             input: 
               save_cookie: true
-              dest_addr: "ieee.org"
+              dest_addr: "www.ieee.org"
               method: "GET"
-              port: 80
+              port: 443
               headers: 
                   User-Agent: "Foo"
-                  Host: "ieee.org"
-              protocol: "http"
+                  Host: "www.ieee.org"
+              protocol: "https"
               uri: "/"
             output: 
               status: 302
-              response_contains: "Set-Cookie: TS01293935="
+              response_contains: "Set-Cookie: TS01247332="
