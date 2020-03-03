@@ -31,11 +31,11 @@ def test_cookies2():
     x = ruleset.Input(dest_addr="ieee.org",
                       headers={
                           "Host": "ieee.org",
-                          "cookie": "TS01293935=012f3506234413e6c5cb14e8c0"
+                          "cookie": "TS01247332=012f3506234413e6c5cb14e8c0"
                                     "d5bf890fdd02481614b01cd6cd30911c6733e"
                                     "3e6f79e72aa"})
     http_ua.send_request(x)
-    assert('TS01293935=012f3506234413e6c5cb14e8c0d5bf890fdd02481614b01cd6c'
+    assert('TS01247332=012f3506234413e6c5cb14e8c0d5bf890fdd02481614b01cd6c'
            'd30911c6733e3e6f79e72aa' in
            http_ua.request_object.headers["cookie"])
 
@@ -49,13 +49,13 @@ def test_cookies3():
     x = ruleset.Input(dest_addr="ieee.org",
                       headers={
                           "Host": "ieee.org",
-                          "cookie": "TS01293935=012f3506234413e6c5cb14e8c0d"
+                          "cookie": "TS01247332=012f3506234413e6c5cb14e8c0d"
                                     "5bf890fdd02481614b01cd6cd30911c6733e3e"
                                     "6f79e72aa; XYZ=123"})
     http_ua.send_request(x)
     assert(set([chunk.split('=')[0].strip() for chunk in
                 http_ua.request_object.headers["cookie"].split(';')]) ==
-           set(['XYZ', 'TS01293935']))
+           set(['XYZ', 'TS01247332']))
 
 
 def test_cookies4():
