@@ -1,0 +1,19 @@
+---
+  meta:
+    author: "Federico G. Schwindt"
+    enabled: true
+    name: "BASICFIXTURE.yaml"
+    description: Test various things
+  tests:
+    -
+      test_title: UTF-8文字をテストする
+      stages:
+        -
+          stage:
+            input:
+              dest_addr: www.example.com
+              headers:
+                  User-Agent: Foo
+                  Host: www.example.com
+            output:
+              status: 200

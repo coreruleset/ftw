@@ -16,5 +16,6 @@ script:
   - py.test test/integration/test_cookie.py --rule=test/integration/COOKIEFIXTURE.yaml
   - py.test test/integration/test_runner.py --rule=test/integration/MULTIPART.yaml
   - py.test test/integration/test_runner.py --rule=test/integration/EXPECTERRORFIXTURE.yaml
+  - py.test test/integration/test_runner.py --rule=test/integration/BASICFIXTURE.yaml
   - py.test --pycodestyle ftw || true
   - py.test --flakes ftw

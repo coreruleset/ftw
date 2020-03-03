@@ -1,4 +1,5 @@
 from __future__ import print_function
+import io
 import yaml
 import os
 import sqlite3
@@ -85,7 +86,7 @@ def extract_yaml(yaml_files):
     loaded_yaml = []
     for yaml_file in yaml_files:
         try:
-            with open(yaml_file, 'r') as fd:
+            with io.open(yaml_file, encoding='utf-8') as fd:
                 loaded_yaml.append(yaml.safe_load(fd))
         except IOError as e:
             print('Error reading file', yaml_file)
