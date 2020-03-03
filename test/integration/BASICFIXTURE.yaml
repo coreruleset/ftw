@@ -13,8 +13,8 @@
             input:
               dest_addr: www.example.com
               headers:
-                  User-Agent: Foo
-                  Host: www.example.com
+                User-Agent: Foo
+                Host: www.example.com
             output:
               status: 200
     -
@@ -26,8 +26,8 @@
             input:
               dest_addr: www.example.com
               headers:
-                  User-Agent: Foo
-                  Host: www.example.com
+                User-Agent: Foo
+                Host: www.example.com
             output:
               status: 500
     -
@@ -38,9 +38,9 @@
             input:
               dest_addr: www.example.com
               headers:
-                  User-Agent: Foo
-                  Host: www.example.com
-                  Content-Length: 100
+                User-Agent: Foo
+                Host: www.example.com
+                Content-Length: 100
             output:
               expect_error: true
     -
@@ -52,9 +52,9 @@
               dest_addr: www.example.com
               method: POST
               headers:
-                  User-Agent: Foo
-                  Host: www.example.com
-                  Content-Type: multipart/form-data; boundary=--------397236876
+                User-Agent: Foo
+                Host: www.example.com
+                Content-Type: multipart/form-data; boundary=--------397236876
               data:
                 - '----------397236876'
                 - 'Content-Disposition: form-data; name="text";'
@@ -69,3 +69,29 @@
                 - '----------397236876--'
             output:
               status: 200
+    -
+      test_title: Test response_contains with body
+      stages:
+        -
+          stage:
+            input:
+              dest_addr: www.example.com
+              headers:
+                User-Agent: Foo
+                Host: www.example.com
+            output:
+              status: 200
+              response_contains: is for use in illustrative
+    -
+      test_title: Test response_contains with headers
+      stages:
+        -
+          stage:
+            input:
+              dest_addr: www.example.com
+              headers:
+                User-Agent: Foo
+                Host: www.example.com
+            output:
+              status: 200
+              response_contains: 'Content-Type: text/html'

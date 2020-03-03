@@ -3,12 +3,6 @@ import pytest
 import re
 
 
-def test_logcontains(ruleset, test):
-    runner = testrunner.TestRunner()
-    for stage in test.stages:
-        runner.run_stage(stage)
-
-
 # Should return a test error because its searching before response
 def test_search1():
     runner = testrunner.TestRunner()
