@@ -186,6 +186,15 @@ def test_invalid_deflate():
                           http_ua)
 
 
+def test_invalid_brotli():
+    """Invalid brotli content"""
+    http_ua = http.HttpUA()
+    with pytest.raises(errors.TestError):
+        http.HttpResponse("HTTP1.1 200 OK\r\n"
+                          "Content-Encoding: br\r\n\r\ninvalid data",
+                          http_ua)
+
+
 def test1():
     """Typical request specified should be valid"""
     x = ruleset.Input(dest_addr="example.com", headers={"Host": "example.com"})
@@ -366,6 +375,17 @@ def test19():
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     assert http_ua.request_object.data == "test=hello%3Fx"
+
+
+def test_brotli():
+    """Accept-Encoding br"""
+    x = ruleset.Input(dest_addr="httpbin.org", uri="/brotli",
+                      headers={"Host": "httpbin.org",
+                               "Accept-Encoding": "br"})
+    http_ua = http.HttpUA()
+    http_ua.send_request(x)
+    assert http_ua.response_object.status == 200
+    assert http_ua.response_object.headers["content-encoding"] == "br"
 
 
 def test_deflate():
