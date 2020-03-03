@@ -3,39 +3,30 @@ import pytest
 import re
 
 
-# Should return a test error because its searching before response
-def test_search1():
+def test_search_before_response():
     runner = testrunner.TestRunner()
-    ruleset.Input(dest_addr="example.com", headers={"Host": "example.com"})
+    ruleset.Input(dest_addr="example.com",
+                  headers={"Host": "example.com"})
     http_ua = http.HttpUA()
     with pytest.raises(errors.TestError):
         runner.test_response(http_ua.response_object, re.compile('dog'))
 
 
-# Should return a failure because it is searching for a word not there
-def test_search2():
+def test_search_not_found():
     runner = testrunner.TestRunner()
-    x = ruleset.Input(dest_addr="example.com", headers={"Host": "example.com"})
+    x = ruleset.Input(dest_addr="example.com",
+                      headers={"Host": "example.com"})
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     with pytest.raises(AssertionError):
         runner.test_response(http_ua.response_object, re.compile('dog'))
 
 
-# Should return a success because it is searching for a word not there
-def test_search3():
+def test_search_success():
     runner = testrunner.TestRunner()
-    x = ruleset.Input(dest_addr="example.com", headers={"Host": "example.com"})
+    x = ruleset.Input(dest_addr="example.com",
+                      headers={"Host": "example.com"})
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     runner.test_response(http_ua.response_object,
                          re.compile('is for use in illustrative'))
-
-
-# Should return a success because we found our regex
-def test_search4():
-    runner = testrunner.TestRunner()
-    x = ruleset.Input(dest_addr="example.com", headers={"Host": "example.com"})
-    http_ua = http.HttpUA()
-    http_ua.send_request(x)
-    runner.test_response(http_ua.response_object, re.compile('.*'))
