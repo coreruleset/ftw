@@ -1,5 +1,6 @@
 from __future__ import print_function
 import brotli
+import io
 import socket
 import ssl
 import errno
@@ -134,8 +135,8 @@ class HttpResponse(object):
                             'function': 'http.HttpResponse.check_for_cookie'
                         })
                 try:
-                    with open(psl_path, 'r') as public_suffixs:
-                        for line in public_suffixs:
+                    with io.open(psl_path, 'r', encoding='utf-8') as fo:
+                        for line in fo:
                             if line[:2] == '//' or line[0] == ' ' or \
                                line[0].strip() == '':
                                 continue
