@@ -14,7 +14,7 @@ import zlib
 import encodings
 from IPy import IP
 
-from six import BytesIO, PY2, b, ensure_binary, ensure_str, iteritems, \
+from six import BytesIO, PY2, ensure_binary, ensure_str, iteritems, \
     text_type
 from six.moves import http_cookies
 
