@@ -6,7 +6,7 @@
     description: Test various things
   tests:
     -
-      test_title: UTF-8文字をテストする
+      test_title: Test UTF-8 characters
       stages:
         -
           stage:
@@ -15,6 +15,7 @@
               headers:
                 User-Agent: Foo
                 Host: www.example.com
+              uri: /?q=映像研には手を出すな！
             output:
               status: 200
     -

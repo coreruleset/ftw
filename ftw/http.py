@@ -285,7 +285,7 @@ class HttpUA(object):
         self.build_socket()
         self.build_request()
         try:
-            self.sock.send(b(self.request))
+            self.sock.send(self.request)
         except socket.error as err:
             raise errors.TestError(
                 'We were unable to send the request to the socket',
@@ -453,15 +453,15 @@ class HttpUA(object):
                     {
                         'function': 'http.HttpUA.build_request'
                     })
-            request = self.request_object.raw_request
+            request = ensure_binary(self.request_object.raw_request)
             # We do this regardless of magic if you want to send a literal
             # '\' 'r' or 'n' use encoded request.
-            request = b(request).decode(escape_codec)
+            request = request.decode(escape_codec)
         if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
             request = request.decode(escape_codec)
         # if we have an Encoded request we should use that
-        self.request = request
+        self.request = ensure_binary(request)
 
     def get_response(self):
         """
