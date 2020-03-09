@@ -11,7 +11,6 @@ script:
   - py.test test/unit
   - py.test test/integration/test_logcontains.py --rule=test/integration/LOGCONTAINSFIXTURE.yaml
   - py.test test/integration/test_nologcontains.py --rule=test/integration/NOLOGCONTAINSFIXTURE.yaml
-  - py.test test/integration/test_htmlcontains.py
   - py.test test/integration/test_http.py
   - py.test test/integration/test_cookie.py --rule=test/integration/COOKIEFIXTURE.yaml
   - py.test test/integration/test_runner.py --rule=test/integration/BASICFIXTURE.yaml
