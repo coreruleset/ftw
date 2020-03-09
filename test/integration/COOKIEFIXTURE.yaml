@@ -38,37 +38,3 @@
             output: 
               status: 200
               response_contains: "Set-Cookie: TS01247332="
-    - 
-      test_title: "Multi-Stage w\\ Cookie rule disabled"
-      enabled: false
-      stages: 
-        - 
-          stage: 
-            input: 
-              save_cookie: true
-              dest_addr: "www.ieee.org"
-              method: "GET"
-              port: 443
-              headers: 
-                  User-Agent: "Foo"
-                  Host: "www.ieee.org"
-              protocol: "https"
-              uri: "/"
-            output: 
-              status: 302
-              response_contains: "Set-Cookie: TS01247332="
-        -
-          stage: 
-            input: 
-              save_cookie: true
-              dest_addr: "www.ieee.org"
-              method: "GET"
-              port: 443
-              headers: 
-                  User-Agent: "Foo"
-                  Host: "www.ieee.org"
-              protocol: "https"
-              uri: "/"
-            output: 
-              status: 302
-              response_contains: "Set-Cookie: TS01247332="
