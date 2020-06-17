@@ -57,7 +57,7 @@ def get_rulesets(ruledir, recurse):
     List of ruleset objects extracted from the yaml directory
     """
     if os.path.isdir(ruledir) and recurse:
-        yaml_files = [y for x in os.walk(ruledir)
+        yaml_files = [y for x in os.walk(ruledir, followlinks=True)
                       for y in glob(os.path.join(x[0], '*.yaml'))]
     elif os.path.isdir(ruledir) and not recurse:
         yaml_files = get_files(ruledir, 'yaml')
