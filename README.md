@@ -1,5 +1,5 @@
 ## Framework for Testing WAFs (FTW)
-[![Build Status](https://travis-ci.org/CRS-support/ftw.svg?branch=master)](https://travis-ci.org/fastly/ftw)
+[![Build Status](https://github.com/coreruleset/ftw/workflows/ci/badge.svg?branch=master)]
 [![PyPI version](https://badge.fury.io/py/ftw.svg)](https://badge.fury.io/py/ftw)
 
 ##### Purpose
