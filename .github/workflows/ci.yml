@@ -1,0 +1,37 @@
+name: ci
+
+on: [push, pull_request]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ '2.x', '3.x' ]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install requirements
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pip install pytest-codestyle || true
+          python -m pip install pytest-flakes
+          python setup.py install
+      - name: Run tests
+        run: |
+          py.test test/unit
+          py.test test/integration/test_logcontains.py --rule=test/integration/LOGCONTAINSFIXTURE.yaml
+          py.test test/integration/test_nologcontains.py --rule=test/integration/NOLOGCONTAINSFIXTURE.yaml
+          py.test test/integration/test_http.py
+          py.test test/integration/test_cookie.py --rule=test/integration/COOKIEFIXTURE.yaml
+          py.test test/integration/test_runner.py --rule=test/integration/BASICFIXTURE.yaml
+          py.test --pycodestyle ftw || true
+          py.test --flakes ftw
+        continue-on-error: true
