@@ -15,7 +15,7 @@ Goals / Use cases include:
 For our 1.0 release announcement, check out the [OWASP CRS Blog](https://coreruleset.org/20170810/testing-wafs-ftw-version-1-0-released/)
 
 ## Installation
-* `git clone https://github.com/CRS-support/ftw.git`
+* `git clone https://github.com/coreruleset/ftw.git`
 * `cd ftw`
 * `virtualenv env && source ./env/bin/activate` 
 * `pip install -r requirements.txt`
@@ -26,9 +26,9 @@ The core of FTW is it's extensible `yaml` based tests. This section lists a few 
  
 OWASP CRS wrote a great [blog post](https://coreruleset.org/20170915/writing-ftw-test-cases-for-owasp-crs/) describing how FTW tests are written and executed. 
 
-[YAMLFormat.md](https://github.com/CRS-support/ftw/blob/master/docs/YAMLFormat.md) is ground truth of all `yaml` fields that are currently understood by FTW.
+[YAMLFormat.md](https://github.com/coreruleset/ftw/blob/master/docs/YAMLFormat.md) is ground truth of all `yaml` fields that are currently understood by FTW.
 
-After reading these two resources, you should be able to get started in writing tests. You will most likely be checking against status code responses, or web request responses using the `log_contains` directive. For integrating FTW to test regexes within your WAF logs, refer to [ExtendingFTW.md](https://github.com/CRS-support/ftw/blob/master/docs/ExtendingFTW.md)
+After reading these two resources, you should be able to get started in writing tests. You will most likely be checking against status code responses, or web request responses using the `log_contains` directive. For integrating FTW to test regexes within your WAF logs, refer to [ExtendingFTW.md](https://github.com/coreruleset/ftw/blob/master/docs/ExtendingFTW.md)
 
 ## Provisioning Apache+Modsecurity+OWASP CRS
 If you require an environment for testing WAF rules, there has been one created with Apache, Modsecurity and version 3.0.0 of the OWASP core ruleset. This can be deployed by:
