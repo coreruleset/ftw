@@ -7,8 +7,8 @@ setup(name='ftw',
       description='Framework for Testing WAFs',
       author='Chaim Sanders, Zack Allen',
       author_email='zma4580@gmail.com, chaim.sanders@gmail.com',
-      url='https://www.github.com/crs-support/ftw',
-      download_url='https://github.com/crs-support/ftw/tarball/1.2.0',
+      url='https://www.github.com/coreruleset/ftw',
+      download_url='https://github.com/coreruleset/ftw/tarball/1.2.0',
       include_package_data=True,
       package_data={
           'ftw': ['util/public_suffix_list.dat']
