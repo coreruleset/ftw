@@ -509,17 +509,6 @@ class HttpUA(object):
                             'message': err,
                             'function': 'http.HttpUA.get_response'
                         })
-        if not b''.join(our_data):
-            raise errors.TestError(
-                'No response from server. Request likely timed out.',
-                {
-                    'host': self.request_object.dest_addr,
-                    'port': self.request_object.port,
-                    'proto': self.request_object.protocol,
-                    'msg': 'Please send the request and check Wireshark',
-                    'function': 'http.HttpUA.get_response'
-                })
-        self.response_object = HttpResponse(b''.join(our_data), self)
         try:
             self.sock.shutdown(1)
             self.sock.close()
@@ -530,3 +519,16 @@ class HttpUA(object):
                     'msg': err,
                     'function': 'http.HttpUA.get_response'
                 })
+        else:
+            self.response_object = HttpResponse(b''.join(our_data), self)
+        finally:
+            if not b''.join(our_data):
+                raise errors.TestError(
+                    'No response from server. Request likely timed out.',
+                    {
+                        'host': self.request_object.dest_addr,
+                        'port': self.request_object.port,
+                        'proto': self.request_object.protocol,
+                        'msg': 'Please send the request and check Wireshark',
+                        'function': 'http.HttpUA.get_response'
+                    })
