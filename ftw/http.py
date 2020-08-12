@@ -510,7 +510,7 @@ class HttpUA(object):
                             'function': 'http.HttpUA.get_response'
                         })
         try:
-            self.sock.shutdown(1)
+            self.sock.shutdown(socket.SHUT_WR)
             self.sock.close()
         except socket.error as err:
             raise errors.TestError(
