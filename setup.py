@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='ftw',
-      version='1.2.1',
+      version='1.3.0',
       description='Framework for Testing WAFs',
       author='Chaim Sanders, Zack Allen',
       author_email='zma4580@gmail.com, chaim.sanders@gmail.com',
@@ -20,11 +20,12 @@ setup(name='ftw',
       },
       packages=['ftw'],
       keywords=['waf'],
+      # custom PyPI classifier for pytest plugins
+      classifiers=["Framework :: Pytest"],
       install_requires=[
-          'Brotli==1.0.7',
-          'IPy==0.83',
-          'PyYAML==4.2b1',
-          'pytest==4.6',
-          'python-dateutil==2.6.0',
-          'six==1.14.0'
+          'Brotli==1.0.9',
+          'IPy==1.00',
+          'PyYAML==5.3.1',
+          'pytest==6.1.2',
+          'python-dateutil==2.8.1',
       ])
