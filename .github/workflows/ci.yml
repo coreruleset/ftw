@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [ '2.x', '3.x' ]
+        python-version: [ '3.x' ]
 
     steps:
       - name: Checkout repo
