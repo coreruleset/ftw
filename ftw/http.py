@@ -91,7 +91,7 @@ class HttpResponse(object):
             IP(self.dest_addr)
         except ValueError:
             origin_is_ip = False
-        for cookie_morsals in cookie.values():
+        for cookie_morsals in list(cookie.values()):
             # If the coverdomain is blank or the domain is an IP
             # set the domain to be the origin
             if cookie_morsals['domain'] == '' or origin_is_ip:
@@ -363,11 +363,11 @@ class HttpUA(object):
                             'function': 'http.HttpResponse.build_request'
                         })
                 result_cookie = {}
-                for cookie_key, cookie_morsal in provided_cookie.items():
+                for cookie_key, cookie_morsal in list(provided_cookie.items()):
                     result_cookie[cookie_key] = \
                         provided_cookie[cookie_key].value
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in cookie.items():
+                    for cookie_key, cookie_morsal in list(cookie.items()):
                         if cookie_key in list(result_cookie.keys()):
                             # we don't overwrite a user specified
                             # cookie with a saved one
@@ -375,7 +375,7 @@ class HttpUA(object):
                         else:
                             result_cookie[cookie_key] = \
                                 cookie[cookie_key].value
-                for key, value in result_cookie.items():
+                for key, value in list(result_cookie.items()):
                     cookie_value += (str(key) + '=' +
                                      str(value) + '; ')
                     # Remove the trailing semicolon
@@ -383,7 +383,7 @@ class HttpUA(object):
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in cookie.items():
+                    for cookie_key, cookie_morsal in list(cookie.items()):
                         cookie_value += (str(cookie_key) + '=' +
                                          str(cookie_morsal.coded_value) +
                                          '; ')
@@ -394,7 +394,7 @@ class HttpUA(object):
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
-            for hname, hvalue in self.request_object.headers.items():
+            for hname, hvalue in list(self.request_object.headers.items()):
                 headers += str(hname) + ': ' + \
                     str(hvalue) + self.CRLF
         request = request.replace('#headers#', headers)
