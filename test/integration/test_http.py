@@ -12,8 +12,8 @@ def test_cookies1():
                       headers={"Host": "www.ieee.org"})
     http_ua.send_request(x)
     with pytest.raises(KeyError):
-        print(http_ua.request_object.headers["cookie"])
-    assert("set-cookie" in http_ua.response_object.headers.keys())
+        print((http_ua.request_object.headers["cookie"]))
+    assert("set-cookie" in list(http_ua.response_object.headers.keys()))
     cookie_data = http_ua.response_object.headers["set-cookie"]
     cookie_var = cookie_data.split("=")[0]
     x = ruleset.Input(protocol="https", port=443, dest_addr="www.ieee.org",
