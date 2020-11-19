@@ -21,6 +21,10 @@ from six.moves import http_cookies
 from . import errors
 
 
+# Fallback to PROTOCOL_SSLv23 if PROTOCOL_TLS is not available.
+PROTOCOL_TLS = getattr(ssl, "PROTOCOL_TLS", ssl.PROTOCOL_SSLv23)
+
+
 if PY2:
     reload(sys)  # pragma: no flakes
     sys.setdefaultencoding('utf8')
@@ -305,7 +309,7 @@ class HttpUA(object):
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             # Check if TLS
             if self.request_object.protocol == 'https':
-                context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+                context = ssl.SSLContext(PROTOCOL_TLS)
                 context.set_ciphers(self.CIPHERS)
                 self.sock = context.wrap_socket(
                     self.sock, server_hostname=self.request_object.dest_addr)
