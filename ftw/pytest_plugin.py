@@ -3,8 +3,8 @@ import pytest
 from . import util
 from .ruleset import Test
 
-from six.moves.BaseHTTPServer import HTTPServer
-from six.moves.SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import HTTPServer
+from http.server import SimpleHTTPRequestHandler
 
 
 def get_testdata(rulesets):
@@ -30,7 +30,7 @@ def test_id(val):
     if isinstance(val, (dict, Test,)):
         # We must be carful here because errors are swallowed and
         # defaults returned
-        if 'name' in val.ruleset_meta.keys():
+        if 'name' in val.ruleset_meta:
             return '%s -- %s' % (val.ruleset_meta['name'], val.test_title)
         else:
             return '%s -- %s' % ("Unnamed_Test", val.test_title)
