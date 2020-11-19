@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 from ftw import ruleset, http, errors
 import pytest
 
