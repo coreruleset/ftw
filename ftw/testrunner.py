@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import datetime
 from dateutil import parser
 import pytest
