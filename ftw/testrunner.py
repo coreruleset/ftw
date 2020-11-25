@@ -4,7 +4,6 @@ from dateutil import parser
 import pytest
 import sqlite3
 
-from six import ensure_str
 
 from . import errors
 from . import http
@@ -57,7 +56,7 @@ class TestRunner(object):
                     'response_object': response_object,
                     'function': 'testrunner.TestRunner.test_response'
                 })
-        if regex.search(ensure_str(response_object.response)):
+        if regex.search(util.ensure_str(response_object.response)):
             assert True
         else:
             assert False
@@ -67,7 +66,7 @@ class TestRunner(object):
         Checks if the response response contains a regex specified in the
         output stage. It will assert that the regex is present.
         """
-        if regex.search(ensure_str(response)):
+        if regex.search(util.ensure_str(response)):
             assert True
         else:
             assert False

@@ -1,9 +1,7 @@
-import abc
-import six
+from abc improt ABC, abstractmethod
 
 
-@six.add_metaclass(abc.ABCMeta)
-class LogChecker():
+class LogChecker(ABC):
     """
     LogChecker is an abstract class that integrations with WAFs MUST implement.
     This class is used by the testrunner to test log lines against an expected
@@ -17,7 +15,7 @@ class LogChecker():
         self.start = start
         self.end = end
 
-    @abc.abstractmethod
+    @abstractmethod
     def get_logs(self):
         """
         MUST be implemented, MUST return an array of strings
