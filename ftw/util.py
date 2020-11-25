@@ -100,7 +100,7 @@ def extract_yaml(yaml_files):
     
 def ensure_str(s, encoding='utf-8', errors='strict'):
     # Optimization: Fast return for the common case.
-    if isinstance(s) is str:
+    if isinstance(s, str):
         return s
     if isinstance(s, bytes):
         return s.decode(encoding, errors)
