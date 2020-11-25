@@ -366,7 +366,7 @@ class HttpUA(object):
                             'function': 'http.HttpResponse.build_request'
                         })
                 result_cookie = {}
-                for cookie_key, cookie_morsal in provided_cookie:
+                for cookie_key, cookie_morsal in list(provided_cookie.items()):
                     result_cookie[cookie_key] = \
                         provided_cookie[cookie_key].value
                 for cookie in available_cookies:
@@ -378,7 +378,7 @@ class HttpUA(object):
                         else:
                             result_cookie[cookie_key] = \
                                 cookie[cookie_key].value
-                for key, value in result_cookie:
+                for key, value in list(result_cookie.items()):
                     cookie_value += (str(key) + '=' +
                                      str(value) + '; ')
                     # Remove the trailing semicolon
@@ -386,7 +386,7 @@ class HttpUA(object):
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in cookie:
+                    for cookie_key, cookie_morsal in list(cookie.items()):
                         cookie_value += (str(cookie_key) + '=' +
                                          str(cookie_morsal.coded_value) +
                                          '; ')
