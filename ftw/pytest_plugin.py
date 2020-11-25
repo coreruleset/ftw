@@ -27,10 +27,10 @@ def test_id(val):
     Dynamically names tests, useful for when we are running dozens to hundreds
     of tests
     """
-    if isinstance(val, (dict, Test,)):
+    if isinstance(val, (dict, Test)):
         # We must be carful here because errors are swallowed and
         # defaults returned
-        if 'name' in val.ruleset_meta.keys():
+        if 'name' in list(val.ruleset_meta.keys()):
             return '%s -- %s' % (val.ruleset_meta['name'], val.test_title)
         else:
             return '%s -- %s' % ("Unnamed_Test", val.test_title)
@@ -104,7 +104,7 @@ def pytest_addoption(parser):
                      help='pass in a tablename to parse journal results')
     parser.addoption('--port', action='store', default=None,
                      help='destination port to direct tests towards',
-                     choices=range(1, 65536),
+                     choices=list(range(1, 65536)),
                      type=int)
     parser.addoption('--protocol', action='store', default=None,
                      help='destination protocol to direct tests towards',

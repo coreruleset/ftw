@@ -25,7 +25,7 @@ def test_input():
     dictionary = {}
     dictionary['headers'] = headers
     input_2 = ruleset.Input(**dictionary)
-    assert(len(input_2.headers.keys()) == 2)
+    assert(len(list(input_2.headers.keys())) == 2)
     dictionary_2 = {'random_key': 'bar'}
     with pytest.raises(TypeError):
         ruleset.Input(**dictionary_2)

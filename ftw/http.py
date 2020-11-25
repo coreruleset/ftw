@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import brotli
 import io
 import socket
@@ -19,6 +19,7 @@ from six import BytesIO, PY2, ensure_binary, ensure_str, iteritems, \
 from six.moves import http_cookies
 
 from . import errors
+import importlib
 
 
 # Fallback to PROTOCOL_SSLv23 if PROTOCOL_TLS is not available.
@@ -26,7 +27,7 @@ PROTOCOL_TLS = getattr(ssl, "PROTOCOL_TLS", ssl.PROTOCOL_SSLv23)
 
 
 if PY2:
-    reload(sys)  # pragma: no flakes
+    importlib.reload(sys)  # pragma: no flakes
     sys.setdefaultencoding('utf8')
     escape_codec = 'string_escape'
 else:
@@ -106,7 +107,7 @@ class HttpResponse(object):
             IP(self.dest_addr)
         except ValueError:
             origin_is_ip = False
-        for cookie_morsals in cookie.values():
+        for cookie_morsals in list(cookie.values()):
             # If the coverdomain is blank or the domain is an IP
             # set the domain to be the origin
             if cookie_morsals['domain'] == '' or origin_is_ip:
@@ -206,7 +207,7 @@ class HttpResponse(object):
                         })
                 header = ensure_str(header[0]), ensure_str(header[1])
                 response_headers[header[0].lower()] = header[1].lstrip()
-        if 'set-cookie' in response_headers.keys():
+        if 'set-cookie' in list(response_headers.keys()):
             try:
                 cookie = http_cookies.SimpleCookie()
                 cookie.load(response_headers['set-cookie'])
@@ -232,7 +233,7 @@ class HttpResponse(object):
             response_data = self.CRLF.join(split_response[data_line:])
 
         # if the output headers say there is encoding
-        if 'content-encoding' in response_headers.keys():
+        if 'content-encoding' in list(response_headers.keys()):
             response_data = self.parse_content_encoding(
                 response_headers, response_data)
         if len(response_line.split(' ', 2)) != 3:
@@ -333,7 +334,7 @@ class HttpUA(object):
         return_cookies = []
         origin_domain = self.request_object.dest_addr
         for cookie in self.cookiejar:
-            for cookie_morsals in cookie[0].values():
+            for cookie_morsals in list(cookie[0].values()):
                 cover_domain = cookie_morsals['domain']
                 if cover_domain == '':
                     if origin_domain == cookie[1]:
@@ -361,7 +362,7 @@ class HttpUA(object):
         # If the user has requested a tracked cookie and we have one set it
         if available_cookies:
             cookie_value = ''
-            if 'cookie' in self.request_object.headers.keys():
+            if 'cookie' in list(self.request_object.headers.keys()):
                 # Create a SimpleCookie out of our provided cookie
                 try:
                     provided_cookie = http_cookies.SimpleCookie()
@@ -382,7 +383,7 @@ class HttpUA(object):
                         provided_cookie[cookie_key].value
                 for cookie in available_cookies:
                     for cookie_key, cookie_morsal in iteritems(cookie):
-                        if cookie_key in result_cookie.keys():
+                        if cookie_key in list(result_cookie.keys()):
                             # we don't overwrite a user specified
                             # cookie with a saved one
                             pass
@@ -419,7 +420,7 @@ class HttpUA(object):
             encoding = "utf-8"
             # Check to see if we have a content type and magic is
             # off (otherwise UTF-8)
-            if 'Content-Type' in self.request_object.headers.keys() and \
+            if 'Content-Type' in list(self.request_object.headers.keys()) and \
                self.request_object.stop_magic is False:
                 pattern = re.compile(r'\;\s{0,1}?charset\=(.*?)(?:$|\;|\s)')
                 m = re.search(pattern,
