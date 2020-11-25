@@ -1,4 +1,3 @@
-import brotli
 from io import BytesIO
 import socket
 import ssl
@@ -11,6 +10,7 @@ import re
 import base64
 import zlib
 import encodings
+import brotli
 from IPy import IP
 from http import cookies
 
@@ -366,11 +366,11 @@ class HttpUA(object):
                             'function': 'http.HttpResponse.build_request'
                         })
                 result_cookie = {}
-                for cookie_key, cookie_morsal in iteritems(provided_cookie):
+                for cookie_key, cookie_morsal in provided_cookie:
                     result_cookie[cookie_key] = \
                         provided_cookie[cookie_key].value
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in iteritems(cookie):
+                    for cookie_key, cookie_morsal in cookie:
                         if cookie_key in list(result_cookie.keys()):
                             # we don't overwrite a user specified
                             # cookie with a saved one
@@ -378,7 +378,7 @@ class HttpUA(object):
                         else:
                             result_cookie[cookie_key] = \
                                 cookie[cookie_key].value
-                for key, value in iteritems(result_cookie):
+                for key, value in result_cookie:
                     cookie_value += (str(key) + '=' +
                                      str(value) + '; ')
                     # Remove the trailing semicolon
@@ -386,7 +386,7 @@ class HttpUA(object):
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in iteritems(cookie):
+                    for cookie_key, cookie_morsal in cookie:
                         cookie_value += (str(cookie_key) + '=' +
                                          str(cookie_morsal.coded_value) +
                                          '; ')
@@ -397,8 +397,8 @@ class HttpUA(object):
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
-            for hname, hvalue in iteritems(self.request_object.headers):
-                headers += text_type(hname) + ': ' + \
+            for hname, hvalue in self.request_object.headers.items():
+                headers += str(hname) + ': ' + \
                     str(hvalue) + self.CRLF
         request = request.replace('#headers#', headers)
 
