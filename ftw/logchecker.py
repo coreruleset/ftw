@@ -1,4 +1,4 @@
-from abc improt ABC, abstractmethod
+from abc import ABC, abstractmethod
 
 
 class LogChecker(ABC):
