@@ -96,8 +96,8 @@ def extract_yaml(yaml_files):
             print('General error')
             raise e
     return loaded_yaml
-    
-    
+
+
 def ensure_str(s, encoding='utf-8', errors='strict'):
     # Optimization: Fast return for the common case.
     if isinstance(s, str):
@@ -114,4 +114,3 @@ def ensure_binary(s, encoding='utf-8', errors='strict'):
     if isinstance(s, str):
         return s.encode(encoding, errors)
     raise TypeError("not expecting type '%s'" % type(s))
-

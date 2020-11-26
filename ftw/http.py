@@ -424,7 +424,8 @@ class HttpUA(object):
                     if choice in possible_choices:
                         encoding = choice
             try:
-                data_bytes = self.request_object.data.encode(encoding, 'strict')
+                data_bytes = \
+                    self.request_object.data.encode(encoding, 'strict')
             except UnicodeError as err:
                 raise errors.TestError(
                     'Error encoding the data with the charset specified',
