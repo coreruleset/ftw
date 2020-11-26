@@ -34,4 +34,3 @@ jobs:
           py.test test/integration/test_runner.py --rule=test/integration/BASICFIXTURE.yaml
           py.test --pycodestyle ftw || true
           py.test --flakes ftw
-        continue-on-error: true
