@@ -115,7 +115,8 @@ class Input(object):
         # Check if there is any data and do defaults
         if self.data != '':
             # Default values for content length and header
-            if 'Content-Type' not in list(headers.keys()) and stop_magic is False:
+            if 'Content-Type' not in list(headers.keys()) and \
+               stop_magic is False:
                 headers['Content-Type'] = 'application/x-www-form-urlencoded'
             # check if encoded and encode if it should be
             if 'Content-Type' in list(headers.keys()):
@@ -126,7 +127,8 @@ class Input(object):
                         if len(query_string) != 0:
                             encoded_args = urlencode(query_string)
                             self.data = encoded_args
-            if 'Content-Length' not in list(headers.keys()) and stop_magic is False:
+            if 'Content-Length' not in list(headers.keys()) and \
+               stop_magic is False:
                 # The two is for the trailing CRLF and the one after
                 headers['Content-Length'] = len(self.data)
 
@@ -159,7 +161,8 @@ class Test(object):
         """
         Processes and loads an array of stages from the test dictionary
         """
-        return [Stage(stage_dict['stage']) for stage_dict in self.test_dict['stages']]
+        return [Stage(stage_dict['stage'])
+                for stage_dict in self.test_dict['stages']]
 
 
 class Ruleset(object):
@@ -181,7 +184,8 @@ class Ruleset(object):
         creates test objects based on input
         """
         try:
-            return [Test(test_dict, self.meta) for test_dict in self.yaml_file['tests']]
+            return [Test(test_dict, self.meta)
+                    for test_dict in self.yaml_file['tests']]
         except errors.TestError as e:
             e.args[1]['meta'] = self.meta
             raise e

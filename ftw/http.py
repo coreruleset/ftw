@@ -19,7 +19,6 @@ from six import BytesIO, PY2, ensure_binary, ensure_str, iteritems, \
 from six.moves import http_cookies
 
 from . import errors
-import importlib
 
 
 # Fallback to PROTOCOL_SSLv23 if PROTOCOL_TLS is not available.
@@ -27,7 +26,7 @@ PROTOCOL_TLS = getattr(ssl, "PROTOCOL_TLS", ssl.PROTOCOL_SSLv23)
 
 
 if PY2:
-    importlib.reload(sys)  # pragma: no flakes
+    reload(sys)  # pragma: no flakes
     sys.setdefaultencoding('utf8')
     escape_codec = 'string_escape'
 else:
