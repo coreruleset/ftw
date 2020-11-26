@@ -21,7 +21,7 @@ jobs:
       - name: Install requirements
         run: |
           python -m pip install -r requirements.txt
-          python -m pip install pytest-codestyle || true
+          python -m pip install pytest-pycodestyle || true
           python -m pip install pytest-flakes
           python setup.py install
       - name: Run tests
