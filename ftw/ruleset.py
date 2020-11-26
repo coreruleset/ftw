@@ -1,9 +1,9 @@
 import re
 
-from six import ensure_str
-from six.moves.urllib.parse import parse_qsl, unquote, urlencode
+from urllib.parse import parse_qsl, unquote, urlencode
 
 from . import errors
+from . import util
 
 
 class Output(object):
@@ -122,7 +122,7 @@ class Input(object):
             if 'Content-Type' in list(headers.keys()):
                 if headers['Content-Type'] == \
                    'application/x-www-form-urlencoded' and stop_magic is False:
-                    if ensure_str(unquote(self.data)) == self.data:
+                    if util.ensure_str(unquote(self.data)) == self.data:
                         query_string = parse_qsl(self.data)
                         if len(query_string) != 0:
                             encoded_args = urlencode(query_string)

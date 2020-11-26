@@ -1,9 +1,7 @@
-
-import io
-import yaml
 import os
 import sqlite3
 from glob import glob
+import yaml
 
 from . import ruleset
 
@@ -86,7 +84,7 @@ def extract_yaml(yaml_files):
     loaded_yaml = []
     for yaml_file in yaml_files:
         try:
-            with io.open(yaml_file, encoding='utf-8') as fd:
+            with open(yaml_file, encoding='utf-8') as fd:
                 loaded_yaml.append(yaml.safe_load(fd))
         except IOError as e:
             print('Error reading file', yaml_file)
@@ -98,3 +96,21 @@ def extract_yaml(yaml_files):
             print('General error')
             raise e
     return loaded_yaml
+
+
+def ensure_str(s, encoding='utf-8', errors='strict'):
+    # Optimization: Fast return for the common case.
+    if isinstance(s, str):
+        return s
+    if isinstance(s, bytes):
+        return s.decode(encoding, errors)
+    elif not isinstance(s, (str, bytes)):
+        raise TypeError("not expecting type '%s'" % type(s))
+
+
+def ensure_binary(s, encoding='utf-8', errors='strict'):
+    if isinstance(s, bytes):
+        return s
+    if isinstance(s, str):
+        return s.encode(encoding, errors)
+    raise TypeError("not expecting type '%s'" % type(s))

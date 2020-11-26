@@ -1,6 +1,4 @@
-
-import brotli
-import io
+from io import BytesIO
 import socket
 import ssl
 import errno
@@ -12,30 +10,21 @@ import re
 import base64
 import zlib
 import encodings
+import brotli
 from IPy import IP
-
-from six import BytesIO, PY2, ensure_binary, ensure_str, iteritems, \
-    text_type
-from six.moves import http_cookies
+from http import cookies
 
 from . import errors
+from . import util
 
 
 # Fallback to PROTOCOL_SSLv23 if PROTOCOL_TLS is not available.
 PROTOCOL_TLS = getattr(ssl, "PROTOCOL_TLS", ssl.PROTOCOL_SSLv23)
 
 
-if PY2:
-    reload(sys)  # pragma: no flakes
-    sys.setdefaultencoding('utf8')
-    escape_codec = 'string_escape'
-else:
-    escape_codec = 'unicode_escape'
-
-
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
-        self.response = ensure_binary(http_response)
+        self.response = util.ensure_binary(http_response)
         # For testing purposes HTTPResponse might be called OOL
         try:
             self.dest_addr = user_agent.request_object.dest_addr
@@ -139,7 +128,7 @@ class HttpResponse(object):
                             'function': 'http.HttpResponse.check_for_cookie'
                         })
                 try:
-                    with io.open(psl_path, 'r', encoding='utf-8') as fo:
+                    with open(psl_path, 'r', encoding='utf-8') as fo:
                         for line in fo:
                             if line[:2] == '//' or line[0] == ' ' or \
                                line[0].strip() == '':
@@ -185,7 +174,7 @@ class HttpResponse(object):
         Parses an HTTP response after an HTTP request is sent
         """
         split_response = self.response.split(self.CRLF)
-        response_line = ensure_str(split_response[0])
+        response_line = util.ensure_str(split_response[0])
         response_headers = {}
         response_data = None
         data_line = None
@@ -204,13 +193,13 @@ class HttpResponse(object):
                             'header_rcvd': str(header),
                             'function': 'http.HttpResponse.process_response'
                         })
-                header = ensure_str(header[0]), ensure_str(header[1])
+                header = util.ensure_str(header[0]), util.ensure_str(header[1])
                 response_headers[header[0].lower()] = header[1].lstrip()
         if 'set-cookie' in list(response_headers.keys()):
             try:
-                cookie = http_cookies.SimpleCookie()
+                cookie = cookies.SimpleCookie()
                 cookie.load(response_headers['set-cookie'])
-            except http_cookies.CookieError as err:
+            except cookies.CookieError as err:
                 raise errors.TestError(
                     'Error processing the cookie content into a SimpleCookie',
                     {
@@ -364,9 +353,9 @@ class HttpUA(object):
             if 'cookie' in list(self.request_object.headers.keys()):
                 # Create a SimpleCookie out of our provided cookie
                 try:
-                    provided_cookie = http_cookies.SimpleCookie()
+                    provided_cookie = cookies.SimpleCookie()
                     provided_cookie.load(self.request_object.headers['cookie'])
-                except http_cookies.CookieError as err:
+                except cookies.CookieError as err:
                     raise errors.TestError(
                         'Error processing the existing cookie into a '
                         'SimpleCookie',
@@ -377,11 +366,11 @@ class HttpUA(object):
                             'function': 'http.HttpResponse.build_request'
                         })
                 result_cookie = {}
-                for cookie_key, cookie_morsal in iteritems(provided_cookie):
+                for cookie_key, cookie_morsal in list(provided_cookie.items()):
                     result_cookie[cookie_key] = \
                         provided_cookie[cookie_key].value
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in iteritems(cookie):
+                    for cookie_key, cookie_morsal in cookie:
                         if cookie_key in list(result_cookie.keys()):
                             # we don't overwrite a user specified
                             # cookie with a saved one
@@ -389,17 +378,17 @@ class HttpUA(object):
                         else:
                             result_cookie[cookie_key] = \
                                 cookie[cookie_key].value
-                for key, value in iteritems(result_cookie):
-                    cookie_value += (text_type(key) + '=' +
-                                     text_type(value) + '; ')
+                for key, value in list(result_cookie.items()):
+                    cookie_value += (str(key) + '=' +
+                                     str(value) + '; ')
                     # Remove the trailing semicolon
                 cookie_value = cookie_value[:-2]
                 self.request_object.headers['cookie'] = cookie_value
             else:
                 for cookie in available_cookies:
-                    for cookie_key, cookie_morsal in iteritems(cookie):
-                        cookie_value += (text_type(cookie_key) + '=' +
-                                         text_type(cookie_morsal.coded_value) +
+                    for cookie_key, cookie_morsal in list(cookie.items()):
+                        cookie_value += (str(cookie_key) + '=' +
+                                         str(cookie_morsal.coded_value) +
                                          '; ')
                         # Remove the trailing semicolon
                     cookie_value = cookie_value[:-2]
@@ -408,9 +397,9 @@ class HttpUA(object):
         # Expand out our headers into a string
         headers = ''
         if self.request_object.headers != {}:
-            for hname, hvalue in iteritems(self.request_object.headers):
-                headers += text_type(hname) + ': ' + \
-                    text_type(hvalue) + self.CRLF
+            for hname, hvalue in self.request_object.headers.items():
+                headers += str(hname) + ': ' + \
+                    str(hvalue) + self.CRLF
         request = request.replace('#headers#', headers)
 
         # If we have data append it
@@ -435,18 +424,19 @@ class HttpUA(object):
                     if choice in possible_choices:
                         encoding = choice
             try:
-                data = self.request_object.data.encode(encoding)
-            except UnicodeEncodeError as err:
+                data_bytes = \
+                    self.request_object.data.encode(encoding, 'strict')
+            except UnicodeError as err:
                 raise errors.TestError(
                     'Error encoding the data with the charset specified',
                     {
                         'msg': str(err),
                         'Content-Type':
                             str(self.request_object.headers['Content-Type']),
-                        'data': text_type(self.request_object.data),
+                        'data': str(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
                     })
-            request = request.replace('#data#', ensure_str(data))
+            request = request.replace('#data#', util.ensure_str(data_bytes))
         else:
             request = request.replace('#data#', '')
         # If we have a Raw Request we should use that instead
@@ -457,15 +447,15 @@ class HttpUA(object):
                     {
                         'function': 'http.HttpUA.build_request'
                     })
-            request = ensure_binary(self.request_object.raw_request)
+            request = self.request_object.raw_request.encode('utf-8', 'strict')
             # We do this regardless of magic if you want to send a literal
             # '\' 'r' or 'n' use encoded request.
-            request = request.decode(escape_codec)
+            request = request.decode('unicode_escape')
         if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
-            request = request.decode(escape_codec)
+            request = request.decode('unicode_escape')
         # if we have an Encoded request we should use that
-        self.request = ensure_binary(request)
+        self.request = request.encode('utf-8', 'strict')
 
     def get_response(self):
         """
@@ -486,7 +476,7 @@ class HttpUA(object):
             try:
                 data = self.sock.recv(self.RECEIVE_BYTES)
                 if data:
-                    our_data.append(ensure_binary(data))
+                    our_data.append(util.ensure_binary(data))
                     begin = time.time()
                 else:
                     # Sleep for sometime to indicate a gap
