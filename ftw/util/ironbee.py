@@ -4,15 +4,15 @@ import request_to_yaml
 
 
 filelist = []
-for root, dirs, files in os.walk("waf-research", topdown=False):
+for root, dirs, files in os.walk('waf-research', topdown=False):
     for name in files:
         extension = name[-5:]
-        if extension == ".test":
+        if extension == '.test':
             filelist.append(os.path.join(root, name))
 
 for fname in filelist:
     f = open(fname, 'r')
-    request = ""
+    request = ''
     for line in f.readlines():
         if line[0] != '#':
             request += line

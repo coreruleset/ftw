@@ -1,5 +1,4 @@
 import re
-
 from urllib.parse import parse_qsl, unquote, urlencode
 
 from . import errors

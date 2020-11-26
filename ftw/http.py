@@ -1,25 +1,26 @@
+from http import cookies
 from io import BytesIO
-import socket
-import ssl
+import base64
+import encodings
 import errno
-import time
 import gzip
 import os
-import sys
 import re
-import base64
+import socket
+import ssl
+import sys
+import time
 import zlib
-import encodings
+
 import brotli
 from IPy import IP
-from http import cookies
 
 from . import errors
 from . import util
 
 
 # Fallback to PROTOCOL_SSLv23 if PROTOCOL_TLS is not available.
-PROTOCOL_TLS = getattr(ssl, "PROTOCOL_TLS", ssl.PROTOCOL_SSLv23)
+PROTOCOL_TLS = getattr(ssl, 'PROTOCOL_TLS', ssl.PROTOCOL_SSLv23)
 
 
 class HttpResponse(object):
@@ -115,8 +116,8 @@ class HttpResponse(object):
                 cover_domain = cover_domain[first_non_dot:]
                 # We must parse the coverDomain to make sure its
                 # not in the suffix list
-                psl_path = os.path.dirname(__file__) + os.path.sep + \
-                    'util' + os.path.sep + 'public_suffix_list.dat'
+                psl_path = os.path.join(os.path.dirname(__file__),
+                                        'util', 'public_suffix_list.dat')
                 # Check if the public suffix list is present in the ftw dir
                 if os.path.exists(psl_path):
                     pass
@@ -405,7 +406,7 @@ class HttpUA(object):
         # If we have data append it
         if self.request_object.data != '':
             # Before we do that see if that is a charset
-            encoding = "utf-8"
+            encoding = 'utf-8'
             # Check to see if we have a content type and magic is
             # off (otherwise UTF-8)
             if 'Content-Type' in list(self.request_object.headers.keys()) and \
