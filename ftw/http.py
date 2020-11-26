@@ -1,18 +1,19 @@
+from http import cookies
 from io import BytesIO
-import socket
-import ssl
+import base64
+import encodings
 import errno
-import time
 import gzip
 import os
-import sys
 import re
-import base64
+import socket
+import ssl
+import sys
+import time
 import zlib
-import encodings
+
 import brotli
 from IPy import IP
-from http import cookies
 
 from . import errors
 from . import util
@@ -115,8 +116,8 @@ class HttpResponse(object):
                 cover_domain = cover_domain[first_non_dot:]
                 # We must parse the coverDomain to make sure its
                 # not in the suffix list
-                psl_path = os.path.dirname(__file__) + os.path.sep + \
-                    'util' + os.path.sep + 'public_suffix_list.dat'
+                psl_path = os.path.join(os.path.dirname(__file__),
+                                        'util', 'public_suffix_list.dat')
                 # Check if the public suffix list is present in the ftw dir
                 if os.path.exists(psl_path):
                     pass

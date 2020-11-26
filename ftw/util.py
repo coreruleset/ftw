@@ -1,6 +1,7 @@
 import os
-import sqlite3
 from glob import glob
+import sqlite3
+
 import yaml
 
 from . import ruleset

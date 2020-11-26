@@ -1,9 +1,8 @@
-
 import datetime
-from dateutil import parser
-import pytest
 import sqlite3
 
+from dateutil import parser
+import pytest
 
 from . import errors
 from . import http

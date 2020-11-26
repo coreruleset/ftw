@@ -1,10 +1,10 @@
+from http.server import HTTPServer
+from http.server import SimpleHTTPRequestHandler
+
 import pytest
 
 from . import util
 from .ruleset import Test
-
-from http.server import HTTPServer
-from http.server import SimpleHTTPRequestHandler
 
 
 def get_testdata(rulesets):
