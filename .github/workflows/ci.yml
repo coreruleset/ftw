@@ -24,6 +24,11 @@ jobs:
           python -m pip install pytest-pycodestyle || true
           python -m pip install pytest-flakes
           python setup.py install
+      - name: Check source files
+        if: matrix.python-version == '3.9'
+        run: |
+          py.test --pycodestyle ftw
+          py.test --flakes ftw
       - name: Run tests
         run: |
           py.test test/unit
@@ -32,5 +37,3 @@ jobs:
           py.test test/integration/test_http.py
           py.test test/integration/test_cookie.py --rule=test/integration/COOKIEFIXTURE.yaml
           py.test test/integration/test_runner.py --rule=test/integration/BASICFIXTURE.yaml
-          py.test --pycodestyle ftw || true
-          py.test --flakes ftw
