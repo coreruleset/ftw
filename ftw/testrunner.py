@@ -97,10 +97,10 @@ class TestRunner(object):
         conn.text_factory = str
         cur = conn.cursor()
         for i, stage in enumerate(test.stages):
-            '''
+            """
             Query DB here for rule_id & test_title
             Compare against logger_obj
-            '''
+            """
             q = self.query_for_stage_results(tablename)
             results = cur.execute(q, [i, test.test_title]).fetchall()
             if len(results) == 0:

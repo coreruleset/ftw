@@ -33,7 +33,7 @@ def test_id(val):
         if 'name' in list(val.ruleset_meta.keys()):
             return '%s -- %s' % (val.ruleset_meta['name'], val.test_title)
         else:
-            return '%s -- %s' % ("Unnamed_Test", val.test_title)
+            return '%s -- %s' % ('Unnamed_Test', val.test_title)
 
 
 @pytest.fixture

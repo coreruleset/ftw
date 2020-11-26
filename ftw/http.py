@@ -20,7 +20,7 @@ from . import util
 
 
 # Fallback to PROTOCOL_SSLv23 if PROTOCOL_TLS is not available.
-PROTOCOL_TLS = getattr(ssl, "PROTOCOL_TLS", ssl.PROTOCOL_SSLv23)
+PROTOCOL_TLS = getattr(ssl, 'PROTOCOL_TLS', ssl.PROTOCOL_SSLv23)
 
 
 class HttpResponse(object):
@@ -406,7 +406,7 @@ class HttpUA(object):
         # If we have data append it
         if self.request_object.data != '':
             # Before we do that see if that is a charset
-            encoding = "utf-8"
+            encoding = 'utf-8'
             # Check to see if we have a content type and magic is
             # off (otherwise UTF-8)
             if 'Content-Type' in list(self.request_object.headers.keys()) and \
