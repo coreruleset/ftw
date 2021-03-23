@@ -108,8 +108,7 @@ def test_both1():
 def test_encoded1():
     """Test to make sure a encode request works"""
     x = ruleset.Input(dest_addr='example.com',
-                      encoded_request='R0VUIC8gSFRUUC8xLjFcclxuSG9zdDogZXhh'
-                                      'bXBsZS5jb21cclxuXHJcbg==')
+                      encoded_request='R0VUIC8gSFRUUC8xLjENCkhvc3Q6IGV4YW1wbGUuY29tDQoNCgo=')
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     assert http_ua.response_object.status == 200
@@ -226,14 +225,6 @@ def test4():
     http_ua = http.HttpUA()
     http_ua.send_request(x)
     assert http_ua.response_object.status == 200
-
-
-def test5():
-    """Basic GET without Host on 0.9 - Expect 505 version not supported"""
-    x = ruleset.Input(dest_addr='example.com', version='HTTP/0.9', headers={})
-    http_ua = http.HttpUA()
-    http_ua.send_request(x)
-    assert http_ua.response_object.status == 505
 
 
 def test6():

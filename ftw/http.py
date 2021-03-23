@@ -437,9 +437,12 @@ class HttpUA(object):
                         'data': str(self.request_object.data),
                         'function': 'http.HttpResponse.build_request'
                     })
-            request = request.replace('#data#', util.ensure_str(data_bytes))
+            data = util.ensure_str(data_bytes)
         else:
-            request = request.replace('#data#', '')
+            data = ''
+
+        request = request.replace('#data#', data).encode('utf-8', 'strict')
+
         # If we have a Raw Request we should use that instead
         if self.request_object.raw_request is not None:
             if self.request_object.encoded_request is not None:
@@ -452,11 +455,12 @@ class HttpUA(object):
             # We do this regardless of magic if you want to send a literal
             # '\' 'r' or 'n' use encoded request.
             request = request.decode('unicode_escape')
+
         if self.request_object.encoded_request is not None:
             request = base64.b64decode(self.request_object.encoded_request)
-            request = request.decode('unicode_escape')
-        # if we have an Encoded request we should use that
-        self.request = request.encode('utf-8', 'strict')
+
+        # Use the request created
+        self.request = util.ensure_binary(request)
 
     def get_response(self):
         """
