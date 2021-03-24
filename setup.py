@@ -3,12 +3,10 @@
 from setuptools import setup
 
 setup(name='ftw',
-      version='1.2.3',
       description='Framework for Testing WAFs',
       author='Chaim Sanders, Zack Allen',
       author_email='zma4580@gmail.com, chaim.sanders@gmail.com',
       url='https://www.github.com/coreruleset/ftw',
-      download_url='https://github.com/coreruleset/ftw/tarball/1.2.3',
       include_package_data=True,
       package_data={
           'ftw': ['util/public_suffix_list.dat']
@@ -20,6 +18,8 @@ setup(name='ftw',
       },
       packages=['ftw'],
       keywords=['waf'],
+      use_scm_version=True,
+      setup_requires=['setuptools_scm'],
       install_requires=[
           'Brotli==1.0.7',
           'IPy==0.83',
