@@ -37,7 +37,7 @@ setuptools.setup(
     install_requires=[
         'Brotli==1.0.7',
         'IPy==0.83',
-        'PyYAML==4.2b1',
+        'PyYAML==5.4',
         'pytest==4.6',
         'python-dateutil==2.6.0'
     ],
