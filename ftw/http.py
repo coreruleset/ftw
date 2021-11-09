@@ -485,13 +485,14 @@ class HttpUA(object):
             finally:
                 if not b''.join(our_data):
                     raise errors.TestError(
-                        'No response from server.' \
-                            + ' Request likely timed out.',
+                        'No response from server.'
+                        + ' Request likely timed out.',
                         {
                             'host': self.request_object.dest_addr,
                             'port': self.request_object.port,
                             'proto': self.request_object.protocol,
-                            'msg': 'Please send the request and check Wireshark',
+                            'msg': 'Please send the request and check'
+                            + ' Wireshark',
                             'function': 'http.HttpUA.get_response'
                         })
 
