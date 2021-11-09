@@ -483,17 +483,17 @@ class HttpUA(object):
             else:
                 self.response_object = HttpResponse(b''.join(our_data), self)
             finally:
-                if b''.join(our_data):
-                    return
-                raise errors.TestError(
-                    'No response from server. Request likely timed out.',
-                    {
-                        'host': self.request_object.dest_addr,
-                        'port': self.request_object.port,
-                        'proto': self.request_object.protocol,
-                        'msg': 'Please send the request and check Wireshark',
-                        'function': 'http.HttpUA.get_response'
-                    })
+                if not b''.join(our_data):
+                    raise errors.TestError(
+                        'No response from server.' \
+                            + ' Request likely timed out.',
+                        {
+                            'host': self.request_object.dest_addr,
+                            'port': self.request_object.port,
+                            'proto': self.request_object.protocol,
+                            'msg': 'Please send the request and check Wireshark',
+                            'function': 'http.HttpUA.get_response'
+                        })
 
     def read_response_from_socket(self):
         # wait for socket to become ready
@@ -531,7 +531,12 @@ class HttpUA(object):
                     pass
                 elif (self.request_object.protocol == 'https' and
                         err.args[0] == ssl.SSL_ERROR_WANT_READ):
-                    continue
+                    ready_sock, _, _ = select.select(
+                        [self.sock], [], [self.sock], .3)
+                    if not ready_sock:
+                        break
+                    else:
+                        continue
                 # It's an error
                 else:
                     raise errors.TestError(
