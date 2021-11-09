@@ -484,23 +484,25 @@ class HttpUA(object):
             else:
                 self.response_object = HttpResponse(b''.join(our_data), self)
             finally:
-                if not b''.join(our_data):
-                    raise errors.TestError(
-                        'No response from server. Request likely timed out.',
-                        {
-                            'host': self.request_object.dest_addr,
-                            'port': self.request_object.port,
-                            'proto': self.request_object.protocol,
-                            'msg': 'Please send the request and check Wireshark',
-                            'function': 'http.HttpUA.get_response'
-                        })
+                if b''.join(our_data):
+                    return
+                raise errors.TestError(
+                    'No response from server. Request likely timed out.',
+                    {
+                        'host': self.request_object.dest_addr,
+                        'port': self.request_object.port,
+                        'proto': self.request_object.protocol,
+                        'msg': 'Please send the request and check Wireshark',
+                        'function': 'http.HttpUA.get_response'
+                    })
 
     def read_response_from_socket(self):
         # wait for socket to become ready
-        ready_sock, _, _ = select.select([self.sock], [], [self.sock], self.SOCKET_TIMEOUT)
+        ready_sock, _, _ = select.select(
+            [self.sock], [], [self.sock], self.SOCKET_TIMEOUT)
         if not ready_sock:
             raise errors.TestError(
-                f'No response from server within {self.SOCKET_TIMEOUT} seconds',
+                f'No response from server within {self.SOCKET_TIMEOUT}s',
                 {
                     'host': self.request_object.dest_addr,
                     'port': self.request_object.port,
@@ -518,14 +520,15 @@ class HttpUA(object):
                     break
                 our_data.append(util.ensure_binary(data))
             except BlockingIOError as e:
-                if e.errno == socket.EAGAIN:
+                if e.errno == socket.EAGAIN or e.errno == socket.EWOULDBLOCK:
                     # we're done
                     break
                 # something else happened
                 pass
             except OSError as err:
                 # SSL will return SSLWantRead instead of EAGAIN
-                if sys.platform == 'win32' and err.errno == errno.WSAEWOULDBLOCK:
+                if (sys.platform == 'win32' and
+                        err.errno == errno.WSAEWOULDBLOCK):
                     pass
                 elif (self.request_object.protocol == 'https' and
                         err.args[0] == ssl.SSL_ERROR_WANT_READ):

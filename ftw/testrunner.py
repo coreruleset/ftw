@@ -187,17 +187,20 @@ class TestRunner(object):
         else:
             if not http_ua:
                 http_ua = http.HttpUA()
-            if (stage.output.log_contains_str or
-                    stage.output.no_log_contains_str) and logger_obj is not None:
+            if ((stage.output.log_contains_str or
+                    stage.output.no_log_contains_str) and
+                        logger_obj is not None):
                 logger_obj.mark_start()
                 start = datetime.datetime.utcnow()
             http_ua.send_request(stage.input)
-            if (stage.output.log_contains_str or
-                    stage.output.no_log_contains_str) and logger_obj is not None:
+            if ((stage.output.log_contains_str or
+                    stage.output.no_log_contains_str) and
+                        logger_obj is not None):
                 logger_obj.mark_end()
                 end = datetime.datetime.utcnow()
-        if (stage.output.log_contains_str or
-                stage.output.no_log_contains_str) and logger_obj is not None:
+        if ((stage.output.log_contains_str or
+                stage.output.no_log_contains_str) and
+                    logger_obj is not None):
             logger_obj.set_times(start, end)
             lines = logger_obj.get_logs()
             if stage.output.log_contains_str:

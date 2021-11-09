@@ -17,13 +17,15 @@ class LogChecker(ABC):
 
     def mark_start(selfj):
         """
-        May be implemented to set up the log checker before the request is being sent
+        May be implemented to set up the log checker before
+        the request is being sent
         """
         pass
 
     def mark_end(self):
         """
-        May be implemented to tell the log checker that the response has been received
+        May be implemented to tell the log checker that
+        the response has been received
         """
         pass
 
