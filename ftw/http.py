@@ -11,6 +11,7 @@ import ssl
 import sys
 import time
 import zlib
+import select
 
 import brotli
 from IPy import IP
@@ -267,7 +268,6 @@ class HttpUA(object):
             'ADH-AES256-SHA:ECDHE-ECDSA-AES128-GCM-SHA256:' \
             'ECDHE-RSA-AES128-GCM-SHA256:AES128-GCM-SHA256:AES128-SHA256:HIGH:'
         self.CRLF = '\r\n'
-        self.HTTP_TIMEOUT = .3
         self.RECEIVE_BYTES = 8192
         self.SOCKET_TIMEOUT = 5
 
@@ -466,38 +466,71 @@ class HttpUA(object):
         """
         Get the response from the socket
         """
-        self.sock.setblocking(0)
         our_data = []
-        # Beginning time
-        begin = time.time()
+        self.sock.setblocking(False)
+        try:
+            our_data = self.read_response_from_socket()
+        finally:
+            try:
+                self.sock.shutdown(socket.SHUT_WR)
+                self.sock.close()
+            except OSError as err:
+                raise errors.TestError(
+                    'We were unable to close the socket as expected.',
+                    {
+                        'msg': err,
+                        'function': 'http.HttpUA.get_response'
+                    })
+            else:
+                self.response_object = HttpResponse(b''.join(our_data), self)
+            finally:
+                if not b''.join(our_data):
+                    raise errors.TestError(
+                        'No response from server. Request likely timed out.',
+                        {
+                            'host': self.request_object.dest_addr,
+                            'port': self.request_object.port,
+                            'proto': self.request_object.protocol,
+                            'msg': 'Please send the request and check Wireshark',
+                            'function': 'http.HttpUA.get_response'
+                        })
+
+    def read_response_from_socket(self):
+        # wait for socket to become ready
+        ready_sock, _, _ = select.select([self.sock], [], [self.sock], self.SOCKET_TIMEOUT)
+        if not ready_sock:
+            raise errors.TestError(
+                f'No response from server within {self.SOCKET_TIMEOUT} seconds',
+                {
+                    'host': self.request_object.dest_addr,
+                    'port': self.request_object.port,
+                    'proto': self.request_object.protocol,
+                    'msg': 'Please send the request and check Wireshark',
+                    'function': 'http.HttpUA.get_response'
+                })
+
+        our_data = []
         while True:
-            # If we have data then if we're passed the timeout break
-            if our_data and time.time() - begin > self.HTTP_TIMEOUT:
-                break
-            # If we're dataless wait just a bit
-            elif time.time() - begin > self.HTTP_TIMEOUT * 2:
-                break
-            # Recv data
             try:
                 data = self.sock.recv(self.RECEIVE_BYTES)
-                if data:
-                    our_data.append(util.ensure_binary(data))
-                    begin = time.time()
-                else:
-                    # Sleep for sometime to indicate a gap
-                    time.sleep(self.HTTP_TIMEOUT)
-            except socket.error as err:
-                # Check if we got a timeout
-                if err.errno == errno.EAGAIN:
-                    pass
+                if len(data) == 0:
+                    # we're done
+                    break
+                our_data.append(util.ensure_binary(data))
+            except BlockingIOError as e:
+                if e.errno == socket.EAGAIN:
+                    # we're done
+                    break
+                # something else happened
+                pass
+            except OSError as err:
                 # SSL will return SSLWantRead instead of EAGAIN
-                elif sys.platform == 'win32' and \
-                        err.errno == errno.WSAEWOULDBLOCK:
+                if sys.platform == 'win32' and err.errno == errno.WSAEWOULDBLOCK:
                     pass
                 elif (self.request_object.protocol == 'https' and
-                      err.args[0] == ssl.SSL_ERROR_WANT_READ):
+                        err.args[0] == ssl.SSL_ERROR_WANT_READ):
                     continue
-                # If we didn't it's an error
+                # It's an error
                 else:
                     raise errors.TestError(
                         'Failed to connect to server',
@@ -508,26 +541,4 @@ class HttpUA(object):
                             'message': err,
                             'function': 'http.HttpUA.get_response'
                         })
-        try:
-            self.sock.shutdown(socket.SHUT_WR)
-            self.sock.close()
-        except socket.error as err:
-            raise errors.TestError(
-                'We were unable to close the socket as expected.',
-                {
-                    'msg': err,
-                    'function': 'http.HttpUA.get_response'
-                })
-        else:
-            self.response_object = HttpResponse(b''.join(our_data), self)
-        finally:
-            if not b''.join(our_data):
-                raise errors.TestError(
-                    'No response from server. Request likely timed out.',
-                    {
-                        'host': self.request_object.dest_addr,
-                        'port': self.request_object.port,
-                        'proto': self.request_object.protocol,
-                        'msg': 'Please send the request and check Wireshark',
-                        'function': 'http.HttpUA.get_response'
-                    })
+        return our_data
