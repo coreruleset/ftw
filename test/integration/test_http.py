@@ -3,7 +3,6 @@ from ftw import ruleset, http, errors
 import pytest
 
 
-@pytest.mark.skip(reason='Integration failure, @chaimsanders for more info')
 def test_cookies1():
     """Tests accessing a site that sets a cookie and then wants to
        resend the cookie"""
@@ -80,7 +79,6 @@ def test_raw1():
     assert http_ua.response_object.status == 200
 
 
-@pytest.mark.skip(reason='Integration failure, @chaimsanders for more info')
 def test_raw2():
     """Test to make sure a raw request will work with actual seperators"""
     x = ruleset.Input(dest_addr='example.com', raw_request='''GET / HTTP/1.1
