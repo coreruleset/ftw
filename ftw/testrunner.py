@@ -174,7 +174,6 @@ class TestRunner(object):
         input, waits for output then compares expected vs actual output
         http_ua can be passed in to persist cookies
         """
-
         # Send our request (exceptions caught as needed)
         if stage.output.expect_error:
             with pytest.raises(errors.TestError) as excinfo:
@@ -190,13 +189,13 @@ class TestRunner(object):
             if ((stage.output.log_contains_str or
                     stage.output.no_log_contains_str) and
                     logger_obj is not None):
-                logger_obj.mark_start()
+                logger_obj.mark_start(stage.id)
                 start = datetime.datetime.utcnow()
             http_ua.send_request(stage.input)
             if ((stage.output.log_contains_str or
                     stage.output.no_log_contains_str) and
                     logger_obj is not None):
-                logger_obj.mark_end()
+                logger_obj.mark_end(stage.id)
                 end = datetime.datetime.utcnow()
         if ((stage.output.log_contains_str or
                 stage.output.no_log_contains_str) and
