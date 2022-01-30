@@ -135,7 +135,7 @@ def pytest_generate_tests(metafunc):
             arg_names = ['test']
             if 'ruleset' in metafunc.fixturenames:
                 use_rulesets = True
-                arg_names = ['rulesets'] + arg_names
+                arg_names = ['ruleset'] + arg_names
             metafunc.parametrize(
                 arg_names,
                 get_testdata(rulesets, use_rulesets),
