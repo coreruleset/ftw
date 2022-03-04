@@ -15,6 +15,20 @@ class LogChecker(ABC):
         self.start = start
         self.end = end
 
+    def mark_start(self, stage_id):
+        """
+        May be implemented to set up the log checker before
+        the request is being sent
+        """
+        pass
+
+    def mark_end(self, stage_id):
+        """
+        May be implemented to tell the log checker that
+        the response has been received
+        """
+        pass
+
     @abstractmethod
     def get_logs(self):
         """
