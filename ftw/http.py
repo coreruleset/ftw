@@ -520,11 +520,10 @@ class HttpUA(object):
                     break
                 our_data.append(util.ensure_binary(data))
             except BlockingIOError as e:
+                # If we can't handle the error here, pass it on
                 if e.errno == socket.EAGAIN or e.errno == socket.EWOULDBLOCK:
                     # we're done
                     break
-                # something else happened
-                pass
             except OSError as err:
                 # SSL will return SSLWantRead instead of EAGAIN
                 if (sys.platform == 'win32' and
@@ -536,8 +535,6 @@ class HttpUA(object):
                         [self.sock], [], [self.sock], .3)
                     if not ready_sock:
                         break
-                    else:
-                        continue
                 # It's an error
                 else:
                     raise errors.TestError(
