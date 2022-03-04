@@ -27,13 +27,13 @@ def logchecker_obj():
     return LoggerTestObj()
 
 
-def test_logcontains_withlog(logchecker_obj, ruleset, test):
+def test_logcontains_withlog(logchecker_obj, test):
     runner = testrunner.TestRunner()
     for stage in test.stages:
         runner.run_stage(stage, logchecker_obj)
 
 
-def test_logcontains_nolog(logchecker_obj, ruleset, test):
+def test_logcontains_nolog(logchecker_obj, test):
     logchecker_obj.do_nothing = True
     runner = testrunner.TestRunner()
     with(pytest.raises(AssertionError)):

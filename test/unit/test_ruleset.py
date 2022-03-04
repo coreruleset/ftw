@@ -33,11 +33,12 @@ def test_input():
 
 def test_testobj():
     with pytest.raises(KeyError) as excinfo:
-        ruleset.Test({}, {})
+        ruleset.Test({}, {}, {})
     assert 'test_title' in str(excinfo.value)
+    ruleset_meta = {'name': 'test-name.yaml'}
     stages_dict = {'test_title': 1, 'stages': [{'stage':
                    {'output': {'log_contains': 'foo'}, 'input': {}}}]}
-    ruleset.Test(stages_dict, {})
+    ruleset.Test(stages_dict, {}, ruleset_meta)
 
 
 def test_ruleset():

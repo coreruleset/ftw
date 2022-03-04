@@ -7,7 +7,7 @@ from . import util
 from .ruleset import Test
 
 
-def get_testdata(rulesets):
+def get_testdata(rulesets, use_rulesets):
     """
     In order to do test-level parametrization (is this a word?), we have to
     bundle the test data from rulesets into tuples so py.test can understand
@@ -17,7 +17,10 @@ def get_testdata(rulesets):
     for ruleset in rulesets:
         for test in ruleset.tests:
             if test.enabled:
-                testdata.append((ruleset, test))
+                args = [test]
+                if use_rulesets:
+                    args = [rulesets] + args
+            testdata.append(args)
 
     return testdata
 
@@ -127,7 +130,13 @@ def pytest_generate_tests(metafunc):
                 metafunc.config.option.ruledir_recurse, True)
         if metafunc.config.option.rule:
             rulesets = util.get_rulesets(metafunc.config.option.rule, False)
-        if 'ruleset' in metafunc.fixturenames and \
-           'test' in metafunc.fixturenames:
-            metafunc.parametrize('ruleset, test', get_testdata(rulesets),
-                                 ids=test_id)
+        if 'test' in metafunc.fixturenames:
+            use_rulesets = False
+            arg_names = ['test']
+            if 'ruleset' in metafunc.fixturenames:
+                use_rulesets = True
+                arg_names = ['ruleset'] + arg_names
+            metafunc.parametrize(
+                arg_names,
+                get_testdata(rulesets, use_rulesets),
+                ids=test_id)
