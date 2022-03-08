@@ -2,6 +2,11 @@ from ftw import testrunner, http, errors
 import pytest
 
 
+@pytest.mark.skip(
+    reason="""
+    1. ieee.org has a very bad web server, so responses fail a lot
+    2. ieee.org sends multiple set-cookie headers and ftw can only handle a single header of the same name"""
+)
 def test_default(ruleset, test, destaddr):
     """
     Default tester with no logger obj. Useful for HTML contains and Status code

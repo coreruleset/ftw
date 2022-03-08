@@ -3,21 +3,20 @@ from ftw import ruleset, http, errors
 import pytest
 
 
-@pytest.mark.skip(reason='Integration failure, @chaimsanders for more info')
 def test_cookies1():
     """Tests accessing a site that sets a cookie and then wants to
        resend the cookie"""
     http_ua = http.HttpUA()
-    x = ruleset.Input(protocol='https', port=443, dest_addr='www.ieee.org',
-                      headers={'Host': 'www.ieee.org'})
+    x = ruleset.Input(protocol='https', port=443, dest_addr='www.cloudflare.com',
+                      headers={'Host': 'www.cloudflare.com'})
     http_ua.send_request(x)
     with pytest.raises(KeyError):
         print(http_ua.request_object.headers['cookie'])
     assert('set-cookie' in list(http_ua.response_object.headers.keys()))
     cookie_data = http_ua.response_object.headers['set-cookie']
     cookie_var = cookie_data.split('=')[0]
-    x = ruleset.Input(protocol='https', port=443, dest_addr='www.ieee.org',
-                      headers={'Host': 'www.ieee.org'})
+    x = ruleset.Input(protocol='https', port=443, dest_addr='www.cloudflare.com',
+                      headers={'Host': 'www.cloudflare.com'})
     http_ua.send_request(x)
     assert(http_ua.request_object.headers['cookie'].split('=')[0] ==
            cookie_var)
@@ -26,11 +25,11 @@ def test_cookies1():
 def test_cookies2():
     """Test to make sure that we don't override user specified cookies"""
     http_ua = http.HttpUA()
-    x = ruleset.Input(dest_addr='ieee.org', headers={'Host': 'ieee.org'})
+    x = ruleset.Input(dest_addr='example.com', headers={'Host': 'example.com'})
     http_ua.send_request(x)
-    x = ruleset.Input(dest_addr='ieee.org',
+    x = ruleset.Input(dest_addr='example.com',
                       headers={
-                          'Host': 'ieee.org',
+                          'Host': 'example.com',
                           'cookie': 'TS01247332=012f3506234413e6c5cb14e8c0'
                                     'd5bf890fdd02481614b01cd6cd30911c6733e'
                                     '3e6f79e72aa'})
@@ -44,11 +43,11 @@ def test_cookies3():
     """Test to make sure we retain cookies when user specified
        values are provided"""
     http_ua = http.HttpUA()
-    x = ruleset.Input(dest_addr='ieee.org', headers={'Host': 'ieee.org'})
+    x = ruleset.Input(dest_addr='example.com', headers={'Host': 'example.com'})
     http_ua.send_request(x)
-    x = ruleset.Input(dest_addr='ieee.org',
+    x = ruleset.Input(dest_addr='example.com',
                       headers={
-                          'Host': 'ieee.org',
+                          'Host': 'example.com',
                           'cookie': 'TS01247332=012f3506234413e6c5cb14e8c0d'
                                     '5bf890fdd02481614b01cd6cd30911c6733e3e'
                                     '6f79e72aa; XYZ=123'})
@@ -62,9 +61,9 @@ def test_cookies4():
     """Test to make sure cookies are saved when user-specified
        cookie is added"""
     http_ua = http.HttpUA()
-    x = ruleset.Input(dest_addr='ieee.org', headers={'Host': 'ieee.org'})
+    x = ruleset.Input(dest_addr='example.com', headers={'Host': 'example.com'})
     http_ua.send_request(x)
-    x = ruleset.Input(dest_addr='ieee.org', headers={'Host': 'ieee.org',
+    x = ruleset.Input(dest_addr='example.com', headers={'Host': 'example.com',
                       'cookie': 'XYZ=123'})
     http_ua.send_request(x)
     assert('XYZ' in http_ua.request_object.headers['cookie'])
@@ -80,7 +79,6 @@ def test_raw1():
     assert http_ua.response_object.status == 200
 
 
-@pytest.mark.skip(reason='Integration failure, @chaimsanders for more info')
 def test_raw2():
     """Test to make sure a raw request will work with actual seperators"""
     x = ruleset.Input(dest_addr='example.com', raw_request='''GET / HTTP/1.1

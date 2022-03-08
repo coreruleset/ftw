@@ -1,40 +1,67 @@
 ---
-  meta: 
-    author: "Chaim"
-    enabled: true
-    name: "COOKIEFIXTURE.yaml"
-    description: "Tests cookie saving functionality"
-  tests: 
-    - 
-      test_title: "Multi-Stage w\\ Cookie"
-      stages: 
-        - 
-          stage: 
-            input: 
-              save_cookie: true
-              dest_addr: "www.ieee.org"
-              method: "GET"
-              port: 443
-              headers: 
-                  User-Agent: "Foo"
-                  Host: "www.ieee.org"
-              protocol: "https"
-              uri: "/"
-            output: 
-              status: 200
-              response_contains: "Set-Cookie: TS01247332="
-        -
-          stage: 
-            input: 
-              save_cookie: true
-              dest_addr: "www.ieee.org"
-              method: "GET"
-              port: 443
-              headers: 
-                  User-Agent: "Foo"
-                  Host: "www.ieee.org"
-              protocol: "https"
-              uri: "/"
-            output: 
-              status: 200
-              response_contains: "Set-Cookie: TS01247332="
+meta: 
+  author: "Chaim"
+  enabled: true
+  name: "COOKIEFIXTURE.yaml"
+  description: "Tests cookie saving functionality"
+tests: 
+  - test_title: "Multi-Stage w\\ Cookie"
+    stages: 
+      - stage: 
+          input: 
+            save_cookie: true
+            dest_addr: "www.cloudflare.com"
+            method: "GET"
+            port: 443
+            headers: 
+                User-Agent: "Foo"
+                Host: "www.cloudflare.com"
+            protocol: "https"
+            uri: "/"
+          output: 
+            status: 200
+            response_contains: "[Ss]et-[Cc]ookie: __cf_bm="
+      - stage: 
+          input: 
+            save_cookie: true
+            dest_addr: "www.cloudflare.com"
+            method: "GET"
+            port: 443
+            headers: 
+                User-Agent: "Foo"
+                Host: "www.cloudflare.com"
+            protocol: "https"
+            uri: "/"
+          output: 
+            status: 200
+            no_response_contains: "[Ss]et-[Cc]ookie: __cf_bm="
+  - test_title: "Multi-Stage w\\ Cookie; failure because the cookie is reset if not all cookies are present and ftw can only handle one cookie header"
+    stages: 
+      - stage: 
+          input: 
+            save_cookie: true
+            dest_addr: "www.ieee.org"
+            method: "GET"
+            port: 443
+            headers: 
+                User-Agent: "Foo"
+                Host: "www.ieee.org"
+            protocol: "https"
+            uri: "/"
+          output: 
+            status: 200
+            response_contains: "[Ss]et-[Cc]ookie: TS01247332="
+      - stage: 
+          input: 
+            save_cookie: true
+            dest_addr: "www.ieee.org"
+            method: "GET"
+            port: 443
+            headers: 
+                User-Agent: "Foo"
+                Host: "www.ieee.org"
+            protocol: "https"
+            uri: "/"
+          output: 
+            status: 200
+            no_response_contains: "[Ss]et-[Cc]ookie: TS01247332="
