@@ -137,18 +137,26 @@ class Stage(object):
     This class holds information about 1 stage in a test, which contains
     1 input and 1 output
     """
-    def __init__(self, stage_dict):
+    def __init__(self, stage_dict, stage_index, test):
         self.stage_dict = stage_dict
+        self.stage_index = stage_index
+        self.test = test
         self.input = Input(**stage_dict['input'])
         self.output = Output(stage_dict['output'])
+        self.id = self.build_id()
+
+    def build_id(self):
+        rule_name = self.test.ruleset_meta["name"].split('.')[0]
+        return f'{rule_name}-{self.test.test_index}-{self.stage_index}'
 
 
 class Test(object):
     """
     This class holds information for 1 test and potentially many stages
     """
-    def __init__(self, test_dict, ruleset_meta):
+    def __init__(self, test_dict, test_index, ruleset_meta):
         self.test_dict = test_dict
+        self.test_index = test_index
         self.ruleset_meta = ruleset_meta
         self.test_title = self.test_dict['test_title']
         self.stages = self.build_stages()
@@ -160,8 +168,8 @@ class Test(object):
         """
         Processes and loads an array of stages from the test dictionary
         """
-        return [Stage(stage_dict['stage'])
-                for stage_dict in self.test_dict['stages']]
+        return [Stage(stage_dict['stage'], index, self)
+                for index, stage_dict in enumerate(self.test_dict['stages'])]
 
 
 class Ruleset(object):
@@ -183,8 +191,8 @@ class Ruleset(object):
         creates test objects based on input
         """
         try:
-            return [Test(test_dict, self.meta)
-                    for test_dict in self.yaml_file['tests']]
+            return [Test(test_dict, index, self.meta)
+                    for index, test_dict in enumerate(self.yaml_file['tests'])]
         except errors.TestError as e:
             e.args[1]['meta'] = self.meta
             raise e
