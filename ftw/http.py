@@ -19,10 +19,6 @@ from . import errors
 from . import util
 
 
-# Fallback to PROTOCOL_SSLv23 if PROTOCOL_TLS is not available.
-PROTOCOL_TLS = getattr(ssl, 'PROTOCOL_TLS', ssl.PROTOCOL_SSLv23)
-
-
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
         self.response = util.ensure_binary(http_response)
@@ -299,8 +295,9 @@ class HttpUA(object):
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             # Check if TLS
             if self.request_object.protocol == 'https':
-                context = ssl.SSLContext(PROTOCOL_TLS)
+                context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
                 context.set_ciphers(self.CIPHERS)
+                context.load_default_certs(ssl.Purpose.SERVER_AUTH)
                 self.sock = context.wrap_socket(
                     self.sock, server_hostname=self.request_object.dest_addr)
             self.sock.connect(
