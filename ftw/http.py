@@ -19,6 +19,9 @@ from . import errors
 from . import util
 
 
+SOCKET_TIMEOUT = .3
+
+
 class HttpResponse(object):
     def __init__(self, http_response, user_agent):
         self.response = util.ensure_binary(http_response)
@@ -529,7 +532,7 @@ class HttpUA(object):
                 elif (self.request_object.protocol == 'https' and
                         err.args[0] == ssl.SSL_ERROR_WANT_READ):
                     ready_sock, _, _ = select.select(
-                        [self.sock], [], [self.sock], .3)
+                        [self.sock], [], [self.sock], SOCKET_TIMEOUT)
                     if not ready_sock:
                         break
                 # It's an error
