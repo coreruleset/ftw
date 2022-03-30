@@ -163,6 +163,9 @@ class Test(object):
         self.enabled = True
         if 'enabled' in self.test_dict:
             self.enabled = self.test_dict['enabled']
+        self.annotation = None
+        if 'annotation' in self.test_dict:
+            self.annotation = self.test_dict['annotation']
 
     def build_stages(self):
         """
@@ -183,6 +186,9 @@ class Ruleset(object):
         self.author = self.meta['author']
         self.description = self.meta['description']
         self.enabled = self.meta['enabled']
+        self.annotation = None
+        if 'annotation' in self.meta:
+            self.annotation = self.meta['annotation']
         self.tests = self.extract_tests() if self.enabled else []
 
     def extract_tests(self):

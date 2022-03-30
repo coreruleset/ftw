@@ -76,6 +76,28 @@ name
 
 *Note: The name specified here is used as part of the test execution name, in conjunction with the test_title.
 
+annotation
+----
+**Description**: Arbitrary meta data that can be used by programs that extend FTW.
+
+**Syntax:** ```annotation: "<object of any type>"```
+
+**Example Usage:**
+
+```
+annotation:
+    test-sets: ["test-setA", "test-setX"]
+```
+
+**Default Value:** ""
+
+**Scope:** Metadata
+
+**Added Version:** TBF
+
+*Note: This field itself has no effect on FTW.
+However, programs that extend the FTW can use this field to embed arbitrary metadata in each test file in a format they define.
+
 Tests Parameters
 ================
 The tests area is made up of multiple tests. Each test contains Stages and an optional rule_id. Within the Stage there is additional information that is outlined in Stage Parameters
@@ -123,6 +145,30 @@ desc
 **Added Version:** -
 
 *Note: this keyword isn't mandatory, and not part of the structure of test case, ftw doesn't use it*
+
+annotation
+----
+**Description**: Arbitrary meta data that can be used by programs that extend FTW.
+
+**Syntax:** ```annotation: "<object of any type>"```
+
+**Example Usage:**
+
+```
+annotation:
+    skip:
+        runtime:
+            is: modsec3-nginx
+```
+
+**Default Value:** ""
+
+**Scope:** Tests
+
+**Added Version:** TBF
+
+*Note: This field itself has no effect on FTW.
+However, programs that extend the FTW can use this field to embed arbitrary metadata per test case in a format they define.
 
 Stage Parameters
 ================
