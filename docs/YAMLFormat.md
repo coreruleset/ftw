@@ -284,26 +284,26 @@ version
 
 data
 ----
-**Description**: The optional data portion of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string or as a YAML list.
+**Description**: The optional data portion of the HTTP request. Typically these are provided with the content-type header. Data can be provided as a string (if one liner) or as a [YAML literal](https://yaml.org/spec/1.2.2/#812-literal-style).
 
-**Syntax:** ```data: "<string|YAML list>"```
+**Syntax:** ```data: "<string|YAML literal>"```
 
 **Example Usage (string):** ```data: "xyz=123"``
 
-**Example Usage (list):**
+**Example Usage (YAML literal):**
 ```
-  data:
-    - "----------397236876"
-    - "Content-Disposition: form-data; name=\"text\";"
-    - ""
-    - "test default"
-    - "----------397236876"
-    - "Content-Disposition: form-data; name=\"file1\"; filename=\"a.txt\""
-    - "Content-Type: text/plain"
-    - ""
-    - "Content of a.txt."
-    - ""
-    - "----------397236876--"
+  data: |
+    ----------397236876
+    Content-Disposition: form-data; name="text";
+    
+    test default
+    ----------397236876
+    Content-Disposition: form-data; name="file1"; filename="a.txt"
+    Content-Type: text/plain
+    
+    Content of a.txt.
+    
+    ----------397236876--
 ```
 
 **Default Value:** ""
@@ -312,6 +312,7 @@ data
 
 **Added Version:** 0.1
 
+*Note: prefer YAML literal if you need multi-line strings.
 *Note: literals \r and \n will be replaced be replaced with CRLF when stop_magic is on.*
 *Note: if urlencoded content-type header is provided and parameters aren't in name=value form, data will be made empty, unless stop_magic is on.*
 
