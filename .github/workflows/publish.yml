@@ -4,25 +4,28 @@ on:
   release:
     types: [created]
 
+permissions: 
+  contents: read
+
 jobs:
   deploy:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@28f2168f4d98ee0445e3c6321f6e6616c83dd5ec
       with:
-        python-version: '3.x'
+          python-version: '3.11'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install setuptools wheel twine
+        python -m pip install --require-hashes -r requirements-build.txt
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
-        python setup.py sdist bdist_wheel
+        python -m build
         twine upload dist/*

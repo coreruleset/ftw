@@ -31,7 +31,7 @@ setuptools.setup(
         "Framework :: Pytest",
     ],
     packages=["ftw"],
-    python_requires=">=3.6",
+    python_requires=">=3.10",
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     install_requires=[
