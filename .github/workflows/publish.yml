@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@28f2168f4d98ee0445e3c6321f6e6616c83dd5ec
       with:
-        python-version: '3.x'
+        python-version: '3.11'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
