@@ -1,3 +1,5 @@
+⚠️ We are deprecating this project, please see our new testing framework in **https://github.com/coreruleset/go-ftw**
+
 ## Framework for Testing WAFs (FTW)
 ![Build Status](https://github.com/coreruleset/ftw/workflows/ci/badge.svg?branch=master)
 [![PyPI version](https://badge.fury.io/py/ftw.svg)](https://badge.fury.io/py/ftw)
