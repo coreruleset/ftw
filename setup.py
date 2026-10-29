@@ -35,7 +35,7 @@ setuptools.setup(
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     install_requires=[
-        'Brotli==1.0.9',
+        'Brotli==1.2.1',
         'IPy==1.01',
         'PyYAML==6.0',
         'pytest==6.2.5',
